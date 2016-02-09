@@ -1,0 +1,25 @@
+div.dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+div.purple {
+  background-color: #9d5ab7;
+}
+
+div.green {
+  background-color: #89ed90;
+}
+
+div.blue {
+  background-color: #8abdff;
+}
+
+div.red {
+  background-color: #f15c3b;
+}
+
+div.yellow {
+  background-color: #e7dd00;
+}

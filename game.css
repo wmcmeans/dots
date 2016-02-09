@@ -4,9 +4,16 @@ figure.dots-game {
   margin: auto;
 }
 
-ul {
+.group:after {
+  content: "";
   display: block;
-  width: 600px;
+  clear: both;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 li {
@@ -15,6 +22,15 @@ li {
   height: 50px;
   margin: 25px;
   border-radius: 50%;
+  transition: all 0.1s;
+}
+
+li:hover {
+  width: 60px;
+  height: 60px;
+  margin: 20px;
+  cursor: pointer;
+  transition: all 0.1s;
 }
 
 li.purple {

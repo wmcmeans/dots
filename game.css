@@ -1,25 +1,37 @@
-div.dot {
-  width: 30px;
-  height: 30px;
+figure.dots-game {
+  width: 600px;
+  height: 600px;
+  margin: auto;
+}
+
+ul {
+  display: block;
+  width: 600px;
+}
+
+li {
+  float: left;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
 }
 
-div.purple {
+li.purple {
   background-color: #9d5ab7;
 }
 
-div.green {
+li.green {
   background-color: #89ed90;
 }
 
-div.blue {
+li.blue {
   background-color: #8abdff;
 }
 
-div.red {
+li.red {
   background-color: #f15c3b;
 }
 
-div.yellow {
+li.yellow {
   background-color: #e7dd00;
 }

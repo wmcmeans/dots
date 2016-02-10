@@ -19,96 +19,83 @@ h2.scoreboard > span {
 }
 
 ul {
-  /* Rotate list so that first element in column appears at bottom */
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  transform: rotate(180deg);
-
+  /*vertical-align: bottom;*/
   width: 100px;
+  height: 600px;
   float: left;
   padding: 0;
   list-style: none;
 }
 
 li {
-  width: 100px;
-  height: 100px;
-  margin: auto;
-  transition: all 0.1s;
-}
-
-li > div {
+  display: inline-block;
   width: 50px;
   height: 50px;
   margin: auto;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
   border-radius: 50%;
+  transition: all 0.1s;
 }
 
-li > div:hover {
+li:hover {
   width: 60px;
   height: 60px;
   cursor: pointer;
   transition: all 0.1s;
 }
 
-div.active {
+li.active {
   transition: all 0.1s;
 }
 
-div.purple {
+li.purple {
   background-color: #9d5ab7;
 }
 
-div.purple.active {
+li.purple.active {
   border: 10px solid rgb(157, 90, 183);
   border: 10px solid rgba(157, 90, 183, .5);
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
 
-div.green {
+li.green {
   background-color: #89ed90;
 }
 
-div.green.active {
+li.green.active {
   border: 10px solid rgb(137, 237, 144);
   border: 10px solid rgba(137, 237, 144, .5);
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
 
-div.blue {
+li.blue {
   background-color: #8abdff;
 }
 
-div.blue.active {
+li.blue.active {
   border: 10px solid rgb(138, 189, 255);
   border: 10px solid rgba(138, 189, 255, .5);
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
 
-div.red {
+li.red {
   background-color: #f15c3b;
 }
 
-div.red.active {
+li.red.active {
   border: 10px solid rgb(241, 92, 59);
   border: 10px solid rgba(241, 92, 59, .5);
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
 
-div.yellow {
+li.yellow {
   background-color: #e7dd00;
 }
 
-div.yellow.active {
+li.yellow.active {
   border: 10px solid rgb(231, 221, 0);
   border: 10px solid rgba(231, 221, 0, .5);
   -webkit-background-clip: padding-box;

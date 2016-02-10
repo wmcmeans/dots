@@ -4,6 +4,14 @@ figure.dots-game {
   margin: auto;
 }
 
+h2.scoreboard {
+  padding: 15px;
+  text-align: center;
+}
+h2.scoreboard > span {
+  padding: 0 20px;
+}
+
 .group:after {
   content: "";
   display: block;

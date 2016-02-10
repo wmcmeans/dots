@@ -19,51 +19,58 @@ h2.scoreboard > span {
 }
 
 ul {
-  margin: 0;
+  width: 100px;
+  float: left;
   padding: 0;
   list-style: none;
 }
 
 li {
-  float: left;
-  width: 50px;
-  height: 50px;
-  margin: 25px;
-  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin: auto;
   transition: all 0.1s;
 }
 
-li:hover {
+li > div {
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+
+li > div:hover {
   width: 60px;
   height: 60px;
-  margin: 20px;
   cursor: pointer;
   transition: all 0.1s;
 }
 
-li.active {
+div.active {
   width: 60px;
   height: 60px;
-  margin: 20px;
   transition: all 0.1s;
 }
 
-li.purple {
+div.purple {
   background-color: #9d5ab7;
 }
 
-li.green {
+div.green {
   background-color: #89ed90;
 }
 
-li.blue {
+div.blue {
   background-color: #8abdff;
 }
 
-li.red {
+div.red {
   background-color: #f15c3b;
 }
 
-li.yellow {
+div.yellow {
   background-color: #e7dd00;
 }

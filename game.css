@@ -50,8 +50,6 @@ li > div:hover {
 }
 
 div.active {
-  width: 60px;
-  height: 60px;
   transition: all 0.1s;
 }
 
@@ -59,18 +57,53 @@ div.purple {
   background-color: #9d5ab7;
 }
 
+div.purple.active {
+  border: 10px solid rgb(157, 90, 183);
+  border: 10px solid rgba(157, 90, 183, .5);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
 div.green {
   background-color: #89ed90;
+}
+
+div.green.active {
+  border: 10px solid rgb(137, 237, 144);
+  border: 10px solid rgba(137, 237, 144, .5);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
 
 div.blue {
   background-color: #8abdff;
 }
 
+div.blue.active {
+  border: 10px solid rgb(138, 189, 255);
+  border: 10px solid rgba(138, 189, 255, .5);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
 div.red {
   background-color: #f15c3b;
 }
 
+div.red.active {
+  border: 10px solid rgb(241, 92, 59);
+  border: 10px solid rgba(241, 92, 59, .5);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
 div.yellow {
   background-color: #e7dd00;
+}
+
+div.yellow.active {
+  border: 10px solid rgb(231, 221, 0);
+  border: 10px solid rgba(231, 221, 0, .5);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }

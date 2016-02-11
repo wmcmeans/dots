@@ -18,7 +18,9 @@ h2.scoreboard > span {
   clear: both;
 }
 
-ul {
+/* SPOTS */
+
+ul.column {
   /* Rotate list so that first element in column appears at bottom */
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -32,14 +34,14 @@ ul {
   list-style: none;
 }
 
-li {
+li.position {
   width: 100px;
   height: 100px;
   margin: auto;
   transition: all 0.1s;
 }
 
-li > div {
+li.position > div {
   width: 50px;
   height: 50px;
   margin: auto;
@@ -50,7 +52,7 @@ li > div {
   transition: all 0.1s;
 }
 
-li > div:hover {
+li.position > div:hover {
   border-style: solid;
   border-width: 10px;
   cursor: pointer;
@@ -63,7 +65,7 @@ div.squared {
 
 div.active {
   border-style: solid;
-  border-width: 10px;
+  border-width: 5px;
   transition: all 0.1s;
 }
 
@@ -125,4 +127,9 @@ div.yellow.squared {
   border: 10px solid rgba(231, 221, 0, .5);
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
+}
+
+/* CONNECTIONS */
+li.connection {
+  
 }

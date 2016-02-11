@@ -1,5 +1,24 @@
+/* RESET */
+html, body, header, nav, h1, a,
+ul, li, strong, main, button, i,
+section, figure, img, div, h2, p, form,
+fieldset, label, input, textarea,
+span, article, footer, time, small {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+  list-style: none;
+}
+
 figure.dots-game {
-  position: relative;
   height: 700px;
   width: 600px;
   margin: auto;
@@ -20,16 +39,9 @@ h2.scoreboard > span {
 }
 
 figure.game-board {
+  position: relative;
   width: 600px;
   height: 600px;
-  -webkit-margin-before: 0;
-  -webkit-margin-after: 0;
-  -webkit-margin-start: 0;
-  -webkit-margin-end: 0;
-}
-
-ul {
-  list-style: none;
 }
 
 /* SPOTS */
@@ -144,15 +156,18 @@ div.yellow.squared {
 
 /* CONNECTIONS */
 section.connections-board {
+  box-sizing: border-box;
+  width: 600px;
+  height: 600px;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
+  padding: 25px 15px;
 }
 
 ul.connections {
   box-sizing: border-box;
   width: 600px;
-  padding: 40px 20px;
 }
 
 ul.vertical-connections {

@@ -156,29 +156,32 @@ div.yellow.squared {
 
 /* CONNECTIONS */
 section.connections-board {
+  /*z-index: -1;*/
   box-sizing: border-box;
   width: 600px;
   height: 600px;
   position: absolute;
   top: 0;
   left: 0;
-  padding: 25px 15px;
+  padding: 0 50px;
 }
 
 ul.connections {
   box-sizing: border-box;
-  width: 600px;
-}
-
-ul.vertical-connections {
+  padding: 44px 0;
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
   -o-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
-  width: 600px;
-  padding: 0;
-  list-style: none;
+}
+
+section.connections-board.horizontal {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 li.connection {
@@ -186,5 +189,5 @@ li.connection {
   background-color: #000;
   width: 60px;
   height: 12px;
-  margin: 22.5px 18px;
+  margin: 0 20px;
 }

@@ -156,7 +156,7 @@ div.yellow.squared {
 
 /* CONNECTIONS */
 section.connections-board {
-  /*z-index: -1;*/
+  z-index: -1;
   box-sizing: border-box;
   width: 600px;
   height: 600px;
@@ -197,8 +197,28 @@ section.connections-board.vertical {
 
 li.connection {
   float: left;
-  background-color: #000;
+  background-color: transparent;
   width: 60px;
   height: 12px;
   margin: 0 20px;
+}
+
+li.connection.active.purple {
+  background-color: #9d5ab7;
+}
+
+li.connection.active.green {
+  background-color: #89ed90;
+}
+
+li.connection.active.blue {
+  background-color: #8abdff;
+}
+
+li.connection.active.red {
+  background-color: #f15c3b;
+}
+
+li.connection.active.yellow {
+  background-color: #e7dd00;
 }

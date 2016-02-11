@@ -154,6 +154,15 @@ div.yellow.squared {
   background-clip: padding-box;
 }
 
+/* FIRST CONNECTION LINE */
+div#cursor-pos {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: yellow;
+}
+
 /* CONNECTIONS */
 section.connections-board {
   z-index: -1;

@@ -163,6 +163,18 @@ div#cursor-pos {
   background-color: yellow;
 }
 
+svg.connection-line {
+  position: absolute;
+  top: 20px;
+  left: 0;
+}
+
+line {
+  position: absolute;
+  top: 20px;
+  left: 0;
+}
+
 /* CONNECTIONS */
 section.connections-board {
   z-index: -1;

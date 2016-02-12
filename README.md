@@ -2,7 +2,7 @@
 
 ### By Will McMeans
 
-[Play!](http://www.wmcmeans.github.io/dots/board.html)
+[Play!](http://wmcmeans.github.io/dots/board.html)
 
 Spots is a game inspired by the mobile game Dots. The gameplay is simple: connect the dots and score points; form squares and rectangles to get the most points.
 

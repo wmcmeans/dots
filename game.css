@@ -18,12 +18,13 @@ span, article, footer, time, small {
   list-style: none;
 }
 
+
 figure.dots-game {
   height: 700px;
   width: 600px;
   margin: auto;
   text-align: center;
-  font-family: Helvetica;
+  font-family: 'Roboto', Helvetica, sans-serif;
 }
 
 h2.scoreboard {
@@ -49,7 +50,7 @@ figure.game-board {
 
 section.link-out {
   font-size: 16px;
-  font-family: Helvetica;
+  font-family: 'Roboto', Helvetica, sans-serif;
   text-align: center;
 }
 
@@ -60,6 +61,40 @@ figure.dots-game > h2.game-over {
 
 figure.dots-game > h3.game-over {
   font-size: 30px;
+}
+
+section.game-menu {
+  margin-top: 100px;
+  font-family: 'Roboto', Helvetica, sans-serif;
+}
+
+section.game-menu > h3 {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 10px;
+}
+
+section.game-menu > p {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+button.new-game {
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  font-weight: 800;
+  margin: 50px auto;
+  padding: 10px 20px;
+  border-radius: 3px;
+  background-color: #E4E4E4;
+  transition: all 0.1s;
+}
+
+button.new-game:hover {
+  color: #fff;
+  background-color: #8abdff;
+  cursor: pointer;
+  transition: all 0.1s;
 }
 
 /* SPOTS */

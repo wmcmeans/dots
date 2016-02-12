@@ -19,6 +19,7 @@ span, article, footer, time, small {
 }
 
 h1.game-title {
+  margin-top: 10px;
   font-family: 'Fredoka One';
   font-size: 48px;
   font-weight: 800;
@@ -29,26 +30,27 @@ h1.game-title {
 }
 
 span#title-ltr1 {
-  color: #9d5ab7
+  color: #9d5ab7;
 }
 
 span#title-ltr2 {
-  color: #89ed90
+  color: #89ed90;
 }
 
 span#title-ltr3 {
-  color: #8abdff
+  color: #8abdff;
 }
 
 span#title-ltr4 {
-  color: #f15c3b
+  color: #f15c3b;
 }
 
 span#title-ltr5 {
-  color: #e7dd00
+  color: #e7dd00;
 }
 
 figure.dots-game {
+  overflow: hidden;
   height: 700px;
   width: 600px;
   margin: auto;
@@ -57,12 +59,18 @@ figure.dots-game {
 }
 
 h2.scoreboard {
-  margin-top: 20px;
-  font-size: 30px;
-  padding: 15px;
+  font-size: 24px;
+  padding: 15px 90px;
 }
+
 h2.scoreboard > span:first-child {
-  padding: 0 30px 0 0;
+  display: block;
+  float: left;
+}
+
+h2.scoreboard > span:last-child {
+  display: block;
+  float: right;
 }
 
 .group:after {
@@ -77,9 +85,19 @@ figure.game-board {
   height: 600px;
 }
 
-section.link-out {
+h4.link-out {
+  margin: 0;
   font-size: 16px;
   text-align: center;
+  font-family: 'Roboto', Helvetica, sans-serif;
+}
+
+h4 > a {
+  color: #8A8A8A;
+}
+
+h4 > a:hover {
+  color: #8abdff;
 }
 
 figure.dots-game > h2.game-over {
@@ -119,7 +137,7 @@ button.new-game {
 
 button.new-game:hover {
   color: #fff;
-  background-color: #8abdff;
+  background-color: #9d5ab7;
   cursor: pointer;
   transition: all 0.1s;
 }

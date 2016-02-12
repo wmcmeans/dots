@@ -22,14 +22,17 @@ figure.dots-game {
   height: 700px;
   width: 600px;
   margin: auto;
+  text-align: center;
+  font-family: Helvetica;
 }
 
 h2.scoreboard {
+  margin-top: 20px;
+  font-size: 30px;
   padding: 15px;
-  text-align: center;
 }
-h2.scoreboard > span {
-  padding: 0 20px;
+h2.scoreboard > span:first-child {
+  padding: 0 30px 0 0;
 }
 
 .group:after {
@@ -42,6 +45,21 @@ figure.game-board {
   position: relative;
   width: 600px;
   height: 600px;
+}
+
+section.link-out {
+  font-size: 16px;
+  font-family: Helvetica;
+  text-align: center;
+}
+
+figure.dots-game > h2.game-over {
+  margin-top: 100px;
+  font-size: 40px;
+}
+
+figure.dots-game > h3.game-over {
+  font-size: 30px;
 }
 
 /* SPOTS */
@@ -79,9 +97,13 @@ li.position > div {
 
 li.position > div:hover {
   border-style: solid;
-  border-width: 10px;
+  border-width: 5px;
   cursor: pointer;
   transition: all 0.1s;
+}
+
+li.position > div.active:hover {
+  border-width: 10px;
 }
 
 div.squared {

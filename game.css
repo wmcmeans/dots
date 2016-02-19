@@ -124,7 +124,7 @@ section.game-menu > p {
   font-weight: 400;
 }
 
-button.new-game {
+button.game-button {
   font-size: 24px;
   letter-spacing: 0.5px;
   font-weight: 800;
@@ -135,7 +135,7 @@ button.new-game {
   transition: all 0.1s;
 }
 
-button.new-game:hover {
+button.game-button:hover {
   color: #fff;
   background-color: #9d5ab7;
   cursor: pointer;

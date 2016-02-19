@@ -51,11 +51,22 @@ span#title-ltr5 {
 
 figure.dots-game {
   overflow: hidden;
-  height: 700px;
+  height: 685px;
   width: 600px;
   margin: auto;
   text-align: center;
   font-family: 'Roboto', Helvetica, sans-serif;
+}
+
+a.directions-link {
+  color: #8A8A8A;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+a.directions-link:hover {
+  color: #f15c3b;
 }
 
 h2.scoreboard {

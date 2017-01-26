@@ -46,15 +46,305 @@
 
 	'use strict';
 	
-	var DotsView = __webpack_require__(1);
+	var _dotsView = __webpack_require__(4);
 	
-	$(function () {
-	  var rootEl = $('.dots-game');
-	  new DotsView(rootEl);
+	var _dotsView2 = _interopRequireDefault(_dotsView);
+	
+	var _util = __webpack_require__(5);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	document.on('DOMContentLoaded', function () {
+	  var rootEl = (0, _util.queryEl)('.dots-game');
+	  new _dotsView2.default(rootEl);
 	});
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var NEIGHBORS = {
+	  top: [0, 1],
+	  right: [1, 0],
+	  bottom: [0, -1],
+	  left: [-1, 0]
+	};
+	
+	var dotIdCounter = 0;
+	
+	var Dot = function Dot(options) {
+	  this.pos = options.pos;
+	  this.color = options.color;
+	  this.occupiedEntries = {};
+	  this.isHead = false;
+	
+	  this.id = dotIdCounter;
+	  dotIdCounter++;
+	};
+	
+	Dot.prototype.canConnectWith = function (otherDot) {
+	  var relativeLocation = this.findNeighbor(otherDot);
+	  var sameColor = this.color === otherDot.color;
+	
+	  if (relativeLocation && sameColor) {
+	    return !this.occupiedEntries[relativeLocation];
+	  }
+	};
+	
+	Dot.prototype.findNeighbor = function (otherDot) {
+	  for (var location in NEIGHBORS) {
+	    var x = NEIGHBORS[location][0];
+	    var y = NEIGHBORS[location][1];
+	    if (this.pos[0] + x === otherDot.pos[0] && this.pos[1] + y === otherDot.pos[1]) {
+	      return location;
+	    }
+	  }
+	
+	  return null;
+	};
+	
+	Dot.prototype.isSquared = function () {
+	  var connections = 0;
+	  for (var location in this.occupiedEntries) {
+	    if (this.occupiedEntries[location]) {
+	      connections++;
+	    }
+	  }
+	
+	  return connections > 2 || connections === 2 && this.isHead;
+	};
+	
+	var Board = function Board() {
+	  this.selectedDots = [];
+	  this.setup();
+	};
+	
+	Board.colors = ["purple", "green", "blue", "red", "yellow"];
+	
+	var randomColor = function randomColor() {
+	  var idx = Math.floor(Math.random() * 5);
+	  return Board.colors[idx];
+	};
+	
+	var dotSort = function dotSort(dot1, dot2) {
+	  if (dot1.pos[0] === dot2.pos[0]) {
+	    // sort so that higher dot is removed first/doesn't disrupt other positions
+	    if (dot1.pos[1] > dot2.pos[1]) {
+	      return -1;
+	    } else {
+	      return 1;
+	    }
+	  } else if (dot1.pos[0] > dot2.pos[0]) {
+	    return -1;
+	  } else {
+	    return 1;
+	  }
+	};
+	
+	Board.prototype.formConnection = function (newSpot) {
+	  var prevTail = this.selectionTail();
+	  var exit = prevTail.findNeighbor(newSpot);
+	  var entry = getOppositeEntry(exit);
+	
+	  prevTail.occupiedEntries[exit] = true;
+	  newSpot.occupiedEntries[entry] = true;
+	
+	  this.selectedDots.push(newSpot);
+	};
+	
+	Board.prototype.removeLastConnection = function () {
+	  if (this.selectedDots.length < 2) {
+	    return;
+	  }
+	  var newestConnection = this.newestConnection();
+	  var entry = newestConnection[1].findNeighbor(newestConnection[0]);
+	  var exit = getOppositeEntry(entry);
+	
+	  newestConnection[1].occupiedEntries[entry] = false;
+	  newestConnection[0].occupiedEntries[exit] = false;
+	
+	  this.selectedDots.pop();
+	};
+	
+	Board.prototype.newestConnection = function () {
+	  if (this.selectedDots.length < 2) {
+	    return;
+	  }
+	  var lastIdx = this.selectedDots.length - 1;
+	  return [this.selectedDots[lastIdx - 1], this.selectedDots[lastIdx]];
+	};
+	
+	Board.prototype.lastEntryPoint = function () {
+	  var lastConnection = this.newestConnection();
+	  if (!lastConnection) {
+	    return;
+	  }
+	  return lastConnection[1].findNeighbor(lastConnection[0]);
+	};
+	
+	Board.prototype.resetSelections = function () {
+	  if (this.selectedDots[0]) {
+	    this.selectedDots[0].isHead = false;
+	  }
+	  this.selectedDots.forEach(function (dot) {
+	    dot.occupiedEntries = {};
+	  });
+	  this.selectedDots = [];
+	};
+	
+	Board.prototype.selectedColor = function () {
+	  return this.selectedDots[0].color;
+	};
+	
+	Board.prototype.startConnection = function (headDot) {
+	  this.selectedDots = [headDot];
+	};
+	
+	Board.prototype.selectionTail = function () {
+	  return this.selectedDots[this.selectedDots.length - 1];
+	};
+	
+	Board.prototype.anySquares = function () {
+	  var anySquare = this.selectedDots.find(function (dot) {
+	    if (dot.isSquared()) {
+	      return true;
+	    }
+	  });
+	
+	  return anySquare;
+	};
+	
+	Board.prototype.adjustForSquares = function () {
+	  if (this.anySquares()) {
+	    var selectedColor = this.selectedDots[0].color;
+	
+	    this.selectedDots = [];
+	    for (var i = 0; i < 6; i++) {
+	      for (var j = 0; j < 6; j++) {
+	        if (this.grid[i][j].color === selectedColor) {
+	          this.selectedDots.push(this.grid[i][j]);
+	        }
+	      }
+	    }
+	  }
+	};
+	
+	Board.prototype.setup = function () {
+	  this.grid = [];
+	
+	  for (var x = 0; x < 6; x++) {
+	    var column = [];
+	    for (var y = 0; y < 6; y++) {
+	      var dot = new Dot({
+	        pos: [x, y],
+	        color: randomColor()
+	      });
+	      column.push(dot);
+	    }
+	    this.grid.push(column);
+	  }
+	};
+	
+	Board.prototype.update = function () {
+	  var sortedDots = this.selectedDots.sort(dotSort);
+	
+	  this.selectedDots.forEach(function (dot) {
+	    var dotColumn = dot.pos[0];
+	    var dotRow = dot.pos[1];
+	
+	    this.grid[dotColumn].splice(dotRow, 1);
+	
+	    for (var i = dotRow; i < 5; i++) {
+	      this.grid[dotColumn][i].pos[1] = i;
+	    }
+	
+	    this.grid[dotColumn].push(new Dot({
+	      pos: [dotColumn, i],
+	      color: randomColor()
+	    }));
+	  }.bind(this));
+	};
+	
+	function getOppositeEntry(location) {
+	  switch (location) {
+	    case "top":
+	      return "bottom";
+	    case "right":
+	      return "left";
+	    case "bottom":
+	      return "top";
+	    case "left":
+	      return "right";
+	  }
+	}
+	
+	module.exports = Board;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var Game = function Game(board, moves) {
+	  this.board = board;
+	  this.moves = moves || 30;
+	  this.score = 0;
+	};
+	
+	Game.prototype.scoreDots = function () {
+	  var points = this.board.selectedDots.length;
+	  if (points > 1) {
+	    this.board.adjustForSquares();
+	    this.score += points;
+	    this.moves -= 1;
+	    this.board.update();
+	  }
+	
+	  this.board.resetSelections();
+	  return points;
+	};
+	
+	Game.prototype.clearMove = function () {
+	  this.board.resetSelections();
+	};
+	
+	Game.prototype.beginMove = function (spotPos) {
+	  var startSpot = this.board.grid[spotPos[0]][spotPos[1]];
+	
+	  startSpot.isHead = true;
+	  this.board.selectedDots = [startSpot];
+	  this.selectedColor = startSpot.color;
+	};
+	
+	Game.prototype.addSpotToSelection = function (spotPos) {
+	  var prevDot = this.board.selectionTail();
+	  if (spotPos[0] === prevDot.pos[0] && spotPos[1] === prevDot.pos[1]) {
+	    return false;
+	  }
+	
+	  var newDot = this.board.grid[spotPos[0]][spotPos[1]];
+	  if (prevDot.canConnectWith(newDot)) {
+	    this.board.formConnection(newDot);
+	    return true;
+	  }
+	};
+	
+	Game.prototype.revertSelection = function () {
+	  this.board.removeLastConnection();
+	};
+	
+	Game.prototype.over = function () {
+	  return this.moves <= 0;
+	};
+	
+	module.exports = Game;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -350,287 +640,20 @@
 	module.exports = View;
 
 /***/ },
-/* 2 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
 	
-	var NEIGHBORS = {
-	  top: [0, 1],
-	  right: [1, 0],
-	  bottom: [0, -1],
-	  left: [-1, 0]
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var queryEl = exports.queryEl = function queryEl(selector) {
+	  return document.querySelector(selector);
 	};
-	
-	var dotIdCounter = 0;
-	
-	var Dot = function Dot(options) {
-	  this.pos = options.pos;
-	  this.color = options.color;
-	  this.occupiedEntries = {};
-	  this.isHead = false;
-	
-	  this.id = dotIdCounter;
-	  dotIdCounter++;
+	var queryElAll = exports.queryElAll = function queryElAll(selector) {
+	  return document.querySelectorAll(selector);
 	};
-	
-	Dot.prototype.canConnectWith = function (otherDot) {
-	  var relativeLocation = this.findNeighbor(otherDot);
-	  var sameColor = this.color === otherDot.color;
-	
-	  if (relativeLocation && sameColor) {
-	    return !this.occupiedEntries[relativeLocation];
-	  }
-	};
-	
-	Dot.prototype.findNeighbor = function (otherDot) {
-	  for (var location in NEIGHBORS) {
-	    var x = NEIGHBORS[location][0];
-	    var y = NEIGHBORS[location][1];
-	    if (this.pos[0] + x === otherDot.pos[0] && this.pos[1] + y === otherDot.pos[1]) {
-	      return location;
-	    }
-	  }
-	
-	  return null;
-	};
-	
-	Dot.prototype.isSquared = function () {
-	  var connections = 0;
-	  for (var location in this.occupiedEntries) {
-	    if (this.occupiedEntries[location]) {
-	      connections++;
-	    }
-	  }
-	
-	  return connections > 2 || connections === 2 && this.isHead;
-	};
-	
-	var Board = function Board() {
-	  this.selectedDots = [];
-	  this.setup();
-	};
-	
-	Board.colors = ["purple", "green", "blue", "red", "yellow"];
-	
-	var randomColor = function randomColor() {
-	  var idx = Math.floor(Math.random() * 5);
-	  return Board.colors[idx];
-	};
-	
-	var dotSort = function dotSort(dot1, dot2) {
-	  if (dot1.pos[0] === dot2.pos[0]) {
-	    // sort so that higher dot is removed first/doesn't disrupt other positions
-	    if (dot1.pos[1] > dot2.pos[1]) {
-	      return -1;
-	    } else {
-	      return 1;
-	    }
-	  } else if (dot1.pos[0] > dot2.pos[0]) {
-	    return -1;
-	  } else {
-	    return 1;
-	  }
-	};
-	
-	Board.prototype.formConnection = function (newSpot) {
-	  var prevTail = this.selectionTail();
-	  var exit = prevTail.findNeighbor(newSpot);
-	  var entry = getOppositeEntry(exit);
-	
-	  prevTail.occupiedEntries[exit] = true;
-	  newSpot.occupiedEntries[entry] = true;
-	
-	  this.selectedDots.push(newSpot);
-	};
-	
-	Board.prototype.removeLastConnection = function () {
-	  if (this.selectedDots.length < 2) {
-	    return;
-	  }
-	  var newestConnection = this.newestConnection();
-	  var entry = newestConnection[1].findNeighbor(newestConnection[0]);
-	  var exit = getOppositeEntry(entry);
-	
-	  newestConnection[1].occupiedEntries[entry] = false;
-	  newestConnection[0].occupiedEntries[exit] = false;
-	
-	  this.selectedDots.pop();
-	};
-	
-	Board.prototype.newestConnection = function () {
-	  if (this.selectedDots.length < 2) {
-	    return;
-	  }
-	  var lastIdx = this.selectedDots.length - 1;
-	  return [this.selectedDots[lastIdx - 1], this.selectedDots[lastIdx]];
-	};
-	
-	Board.prototype.lastEntryPoint = function () {
-	  var lastConnection = this.newestConnection();
-	  if (!lastConnection) {
-	    return;
-	  }
-	  return lastConnection[1].findNeighbor(lastConnection[0]);
-	};
-	
-	Board.prototype.resetSelections = function () {
-	  if (this.selectedDots[0]) {
-	    this.selectedDots[0].isHead = false;
-	  }
-	  this.selectedDots.forEach(function (dot) {
-	    dot.occupiedEntries = {};
-	  });
-	  this.selectedDots = [];
-	};
-	
-	Board.prototype.selectedColor = function () {
-	  return this.selectedDots[0].color;
-	};
-	
-	Board.prototype.startConnection = function (headDot) {
-	  this.selectedDots = [headDot];
-	};
-	
-	Board.prototype.selectionTail = function () {
-	  return this.selectedDots[this.selectedDots.length - 1];
-	};
-	
-	Board.prototype.anySquares = function () {
-	  var anySquare = this.selectedDots.find(function (dot) {
-	    if (dot.isSquared()) {
-	      return true;
-	    }
-	  });
-	
-	  return anySquare;
-	};
-	
-	Board.prototype.adjustForSquares = function () {
-	  if (this.anySquares()) {
-	    var selectedColor = this.selectedDots[0].color;
-	
-	    this.selectedDots = [];
-	    for (var i = 0; i < 6; i++) {
-	      for (var j = 0; j < 6; j++) {
-	        if (this.grid[i][j].color === selectedColor) {
-	          this.selectedDots.push(this.grid[i][j]);
-	        }
-	      }
-	    }
-	  }
-	};
-	
-	Board.prototype.setup = function () {
-	  this.grid = [];
-	
-	  for (var x = 0; x < 6; x++) {
-	    var column = [];
-	    for (var y = 0; y < 6; y++) {
-	      var dot = new Dot({
-	        pos: [x, y],
-	        color: randomColor()
-	      });
-	      column.push(dot);
-	    }
-	    this.grid.push(column);
-	  }
-	};
-	
-	Board.prototype.update = function () {
-	  var sortedDots = this.selectedDots.sort(dotSort);
-	
-	  this.selectedDots.forEach(function (dot) {
-	    var dotColumn = dot.pos[0];
-	    var dotRow = dot.pos[1];
-	
-	    this.grid[dotColumn].splice(dotRow, 1);
-	
-	    for (var i = dotRow; i < 5; i++) {
-	      this.grid[dotColumn][i].pos[1] = i;
-	    }
-	
-	    this.grid[dotColumn].push(new Dot({
-	      pos: [dotColumn, i],
-	      color: randomColor()
-	    }));
-	  }.bind(this));
-	};
-	
-	function getOppositeEntry(location) {
-	  switch (location) {
-	    case "top":
-	      return "bottom";
-	    case "right":
-	      return "left";
-	    case "bottom":
-	      return "top";
-	    case "left":
-	      return "right";
-	  }
-	}
-	
-	module.exports = Board;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var Game = function Game(board, moves) {
-	  this.board = board;
-	  this.moves = moves || 30;
-	  this.score = 0;
-	};
-	
-	Game.prototype.scoreDots = function () {
-	  var points = this.board.selectedDots.length;
-	  if (points > 1) {
-	    this.board.adjustForSquares();
-	    this.score += points;
-	    this.moves -= 1;
-	    this.board.update();
-	  }
-	
-	  this.board.resetSelections();
-	  return points;
-	};
-	
-	Game.prototype.clearMove = function () {
-	  this.board.resetSelections();
-	};
-	
-	Game.prototype.beginMove = function (spotPos) {
-	  var startSpot = this.board.grid[spotPos[0]][spotPos[1]];
-	
-	  startSpot.isHead = true;
-	  this.board.selectedDots = [startSpot];
-	  this.selectedColor = startSpot.color;
-	};
-	
-	Game.prototype.addSpotToSelection = function (spotPos) {
-	  var prevDot = this.board.selectionTail();
-	  if (spotPos[0] === prevDot.pos[0] && spotPos[1] === prevDot.pos[1]) {
-	    return false;
-	  }
-	
-	  var newDot = this.board.grid[spotPos[0]][spotPos[1]];
-	  if (prevDot.canConnectWith(newDot)) {
-	    this.board.formConnection(newDot);
-	    return true;
-	  }
-	};
-	
-	Game.prototype.revertSelection = function () {
-	  this.board.removeLastConnection();
-	};
-	
-	Game.prototype.over = function () {
-	  return this.moves <= 0;
-	};
-	
-	module.exports = Game;
 
 /***/ }
 /******/ ]);

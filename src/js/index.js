@@ -1,6 +1,7 @@
-var DotsView = require('./dots-view');
+import DotsView from './dotsView';
+import { queryEl } from './util';
 
-$(function () {
-  var rootEl = $('.dots-game');
+document.on('DOMContentLoaded', () => {
+  const rootEl = queryEl('.dots-game');
   new DotsView(rootEl);
 });

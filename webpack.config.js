@@ -1,12 +1,29 @@
 module.exports = {
   context: __dirname,
-  entry: "./lib/main.js",
+  entry: './src/js/index.js',
   output: {
-    path: "./lib",
-    publicPath: "/lib/",
-    filename: "bundle.js",
-    devtoolModuleFilenameTemplate: '[resourcePath]',
-    devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
+    path: './dist/js',
+    publicPath: '/dist/js/',
+    filename: 'bundle.js',
   },
-  devtool: 'source-map'
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  },
+  devtool: 'source-map',
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015'],
+        },
+      },
+      {
+        test: /\.node$/,
+        loader: 'node-loader',
+      },
+    ],
+  },
 };

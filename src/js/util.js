@@ -22,3 +22,31 @@ export const getOppositeDelta = (delta) => {
       throw new Error('delta not found in list of deltas');
   }
 };
+
+export const fixCanvasBlur = (canvas) => {
+  const context = canvas.getContext('2d');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  const backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                            context.mozBackingStorePixelRatio ||
+                            context.msBackingStorePixelRatio ||
+                            context.oBackingStorePixelRatio ||
+                            context.backingStorePixelRatio || 1;
+
+  const ratio = devicePixelRatio / backingStoreRatio;
+
+  if (devicePixelRatio !== backingStoreRatio) {
+    const oldWidth = canvas.width;
+    const oldHeight = canvas.height;
+
+    canvas.width = oldWidth * ratio;
+    canvas.height = oldHeight * ratio;
+
+    canvas.style.width = `${oldWidth}px`;
+    canvas.style.height = `${oldHeight}px`;
+
+    // now scale the context to counter
+    // the fact that we've manually scaled
+    // our canvas element
+    context.scale(ratio, ratio);
+  }
+};

@@ -1,10 +1,12 @@
 import Board from './Board';
+import { fixCanvasBlur } from './util';
 
 export default class SpotsGame {
   constructor(canvas) {
     this.xDim = canvas.offsetWidth;
     this.yDim = canvas.offsetHeight;
     this.ctx = canvas.getContext('2d');
+    fixCanvasBlur(canvas);
 
     this.trackCursor();
 

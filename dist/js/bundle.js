@@ -69,7 +69,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
 	
 	var _constants = __webpack_require__(8);
 	
@@ -99,6 +99,30 @@
 	      throw new Error('delta not found in list of deltas');
 	  }
 	};
+	
+	var fixCanvasBlur = exports.fixCanvasBlur = function fixCanvasBlur(canvas) {
+	  var context = canvas.getContext('2d');
+	  var devicePixelRatio = window.devicePixelRatio || 1;
+	  var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+	
+	  var ratio = devicePixelRatio / backingStoreRatio;
+	
+	  if (devicePixelRatio !== backingStoreRatio) {
+	    var oldWidth = canvas.width;
+	    var oldHeight = canvas.height;
+	
+	    canvas.width = oldWidth * ratio;
+	    canvas.height = oldHeight * ratio;
+	
+	    canvas.style.width = oldWidth + 'px';
+	    canvas.style.height = oldHeight + 'px';
+	
+	    // now scale the context to counter
+	    // the fact that we've manually scaled
+	    // our canvas element
+	    context.scale(ratio, ratio);
+	  }
+	};
 
 /***/ },
 /* 3 */,
@@ -117,6 +141,8 @@
 	
 	var _Board2 = _interopRequireDefault(_Board);
 	
+	var _util = __webpack_require__(2);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -128,6 +154,7 @@
 	    this.xDim = canvas.offsetWidth;
 	    this.yDim = canvas.offsetHeight;
 	    this.ctx = canvas.getContext('2d');
+	    (0, _util.fixCanvasBlur)(canvas);
 	
 	    this.trackCursor();
 	

@@ -10,6 +10,12 @@ export default class SpotsGame {
 
     this.board = new Board();
   }
+  beginMove() {
+    this.board.beginMove(this.cursorPos);
+  }
+  endMove() {
+    console.log('ending');
+  }
   render() {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 
@@ -21,6 +27,7 @@ export default class SpotsGame {
       requestAnimationFrame(animate);
     };
     animate();
+    this.trackMoves();
   }
   trackCursor() {
     this.cursorPos = { x: 0, y: 0 };
@@ -28,12 +35,15 @@ export default class SpotsGame {
       event.preventDefault();
       event.stopPropagation();
 
-      // parseInt????
       const x = event.clientX - this.ctx.canvas.offsetLeft;
       const y = event.clientY - this.ctx.canvas.offsetTop;
       this.cursorPos = { x, y };
     };
 
     document.addEventListener('mousemove', getCursorPos);
+  }
+  trackMoves() {
+    this.ctx.canvas.addEventListener('mousedown', () => this.beginMove());
+    window.addEventListener('mouseup', () => this.endMove());
   }
 }

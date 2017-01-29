@@ -120,6 +120,16 @@
 	  }
 	
 	  _createClass(SpotsGame, [{
+	    key: 'beginMove',
+	    value: function beginMove() {
+	      this.board.beginMove(this.cursorPos);
+	    }
+	  }, {
+	    key: 'endMove',
+	    value: function endMove() {
+	      console.log('ending');
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
@@ -136,6 +146,7 @@
 	        requestAnimationFrame(animate);
 	      };
 	      animate();
+	      this.trackMoves();
 	    }
 	  }, {
 	    key: 'trackCursor',
@@ -147,13 +158,24 @@
 	        event.preventDefault();
 	        event.stopPropagation();
 	
-	        // parseInt????
 	        var x = event.clientX - _this2.ctx.canvas.offsetLeft;
 	        var y = event.clientY - _this2.ctx.canvas.offsetTop;
 	        _this2.cursorPos = { x: x, y: y };
 	      };
 	
 	      document.addEventListener('mousemove', getCursorPos);
+	    }
+	  }, {
+	    key: 'trackMoves',
+	    value: function trackMoves() {
+	      var _this3 = this;
+	
+	      this.ctx.canvas.addEventListener('mousedown', function () {
+	        return _this3.beginMove();
+	      });
+	      window.addEventListener('mouseup', function () {
+	        return _this3.endMove();
+	      });
 	    }
 	  }]);
 	
@@ -193,15 +215,37 @@
 	  }
 	
 	  _createClass(Board, [{
+	    key: 'beginMove',
+	    value: function beginMove(cursorPos) {
+	      var firstSpot = this.findActiveSpot(cursorPos);
+	      if (!firstSpot) return false;
+	
+	      this.selectedSpots.push(firstSpot);
+	    }
+	  }, {
 	    key: 'draw',
 	    value: function draw(ctx, cursorPos) {
-	      var sizeOfSpace = ctx.canvas.offsetWidth / this.grid.length;
+	      var _this = this;
+	
+	      this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
 	
 	      this.grid.forEach(function (row) {
 	        return row.forEach(function (spot) {
-	          return spot.draw(ctx, sizeOfSpace, cursorPos);
+	          return spot.draw(ctx, _this.squareSize, cursorPos);
 	        });
 	      });
+	    }
+	  }, {
+	    key: 'findActiveSpot',
+	    value: function findActiveSpot(cursorPos) {
+	      for (var i = 0; i < this.grid.length; i++) {
+	        for (var j = 0; j < this.grid[0].length; j++) {
+	          var spot = this.grid[i][j];
+	          if (spot.isMouseOver(cursorPos)) return spot;
+	        }
+	      }
+	
+	      return null;
 	    }
 	  }, {
 	    key: 'setup',
@@ -258,8 +302,6 @@
 	    value: function draw(ctx, sizeOfSpace, cursorPos) {
 	      this.setCanvasPos(sizeOfSpace);
 	
-	      // testing
-	      // console.log(cursorPos);
 	      if (this.isMouseOver(cursorPos)) {
 	        console.log("mouse over [" + this.pos.x + ", " + this.pos.y + "] (" + this.color + ")");
 	      }

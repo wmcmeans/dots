@@ -6,12 +6,28 @@ export default class Board {
     this.selectedSpots = [];
     this.setup();
   }
+  beginMove(cursorPos) {
+    const firstSpot = this.findActiveSpot(cursorPos);
+    if (!firstSpot) return false;
+
+    this.selectedSpots.push(firstSpot);
+  }
   draw(ctx, cursorPos) {
-    const sizeOfSpace = ctx.canvas.offsetWidth / this.grid.length;
+    this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
 
     this.grid.forEach(row => (
-      row.forEach(spot => spot.draw(ctx, sizeOfSpace, cursorPos))
+      row.forEach(spot => spot.draw(ctx, this.squareSize, cursorPos))
     ));
+  }
+  findActiveSpot(cursorPos) {
+    for (let i = 0; i < this.grid.length; i++) {
+      for (let j = 0; j < this.grid[0].length; j++) {
+        const spot = this.grid[i][j];
+        if (spot.isMouseOver(cursorPos)) return spot;
+      }
+    }
+
+    return null;
   }
   setup() {
     this.grid = [];

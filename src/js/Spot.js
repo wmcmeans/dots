@@ -6,12 +6,9 @@ export default class Spot {
   draw(ctx, sizeOfSpace, cursorPos) {
     this.setCanvasPos(sizeOfSpace);
 
-    // testing
-    // console.log(cursorPos);
     if (this.isMouseOver(cursorPos)) {
       console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
     }
-
 
     ctx.fillStyle = this.color;
     ctx.beginPath();

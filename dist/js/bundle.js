@@ -168,6 +168,7 @@
 	    this.trackCursor();
 	
 	    this.board = new _Board2.default();
+	    this.score = 0;
 	  }
 	
 	  _createClass(SpotsGame, [{
@@ -180,8 +181,10 @@
 	    key: 'endMove',
 	    value: function endMove() {
 	      this.moving = false;
-	      this.board.endMove();
-	      console.log('ending');
+	      var points = this.board.endMove();
+	      if (points) {
+	        this.score += points;
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -285,11 +288,18 @@
 	      this.moving = true;
 	      var firstSpot = this.findActiveSpot(cursorPos);
 	      if (firstSpot) {
-	        this.cursorPos = cursorPos;
 	        this.addSpotToMove(firstSpot);
 	      } else {
 	        this.endMove();
 	      }
+	    }
+	  }, {
+	    key: 'cancelMove',
+	    value: function cancelMove() {
+	      this.selectedSpots.forEach(function (spot) {
+	        return spot.setInactive();
+	      });
+	      this.clearMove();
 	    }
 	  }, {
 	    key: 'checkForNewConnections',
@@ -299,6 +309,12 @@
 	      if (activeSpot && activeSpot !== head && head.canConnectWith(activeSpot)) {
 	        this.addSpotToMove(activeSpot);
 	      }
+	    }
+	  }, {
+	    key: 'clearMove',
+	    value: function clearMove() {
+	      this.selectedSpots = [];
+	      this.lines = [];
 	    }
 	  }, {
 	    key: 'draw',
@@ -324,7 +340,10 @@
 	    key: 'endMove',
 	    value: function endMove() {
 	      this.moving = false;
-	      // something
+	      if (this.selectedSpots.length > 1) {
+	        return this.tallyAndRemoveSpots();
+	      }
+	      return this.cancelMove();
 	    }
 	  }, {
 	    key: 'findActiveSpot',
@@ -365,6 +384,23 @@
 	        this.grid.push(row);
 	      }
 	    }
+	  }, {
+	    key: 'tallyAndRemoveSpots',
+	    value: function tallyAndRemoveSpots() {
+	      var _this2 = this;
+	
+	      var points = this.selectedSpots.length;
+	      // TODO: Instead of replacing spots in place, they should fall down in their columns
+	      this.selectedSpots.forEach(function (spot) {
+	        var pos = spot.pos;
+	
+	        var replacementSpot = new _Spot2.default({ pos: pos, color: (0, _util.randomColor)() });
+	        _this2.grid[pos.y][pos.x] = replacementSpot;
+	        // this.grid[pos.x].push(replacementSpot);
+	      });
+	      this.clearMove();
+	      return points;
+	    }
 	  }]);
 	
 	  return Board;
@@ -400,8 +436,8 @@
 	
 	    this.pos = pos;
 	    this.color = color;
-	    // this.setInactive();
-	    this.radiusPct = 0.22;
+	    this.setInactive();
+	    // this.radiusPct = 0.22;
 	  }
 	
 	  _createClass(Spot, [{
@@ -449,10 +485,6 @@
 	  }, {
 	    key: 'setActive',
 	    value: function setActive() {
-	      // document.addEventListener('mousemove', (e) => (
-	      //   this.cursorPos = getCursorPos(this.ctx.canvas, e)
-	      // ));
-	      this.active = true;
 	      this.isHead = true;
 	      this.radiusPct = 0.25;
 	    }
@@ -469,7 +501,7 @@
 	    key: 'setInactive',
 	    value: function setInactive() {
 	      this.isHead = false;
-	      // this.radiusPct = 0.22;
+	      this.radiusPct = 0.22;
 	    }
 	  }, {
 	    key: 'isMouseOver',

@@ -22,11 +22,14 @@ export default class Board {
     this.moving = true;
     const firstSpot = this.findActiveSpot(cursorPos);
     if (firstSpot) {
-      this.cursorPos = cursorPos;
       this.addSpotToMove(firstSpot);
     } else {
       this.endMove();
     }
+  }
+  cancelMove() {
+    this.selectedSpots.forEach(spot => spot.setInactive());
+    this.clearMove();
   }
   checkForNewConnections(cursorPos) {
     const activeSpot = this.findActiveSpot(cursorPos);
@@ -34,6 +37,10 @@ export default class Board {
     if (activeSpot && activeSpot !== head && head.canConnectWith(activeSpot)) {
       this.addSpotToMove(activeSpot);
     }
+  }
+  clearMove() {
+    this.selectedSpots = [];
+    this.lines = [];
   }
   draw(ctx, cursorPos) {
     this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
@@ -49,7 +56,10 @@ export default class Board {
   }
   endMove() {
     this.moving = false;
-    // something
+    if (this.selectedSpots.length > 1) {
+      return this.tallyAndRemoveSpots();
+    }
+    return this.cancelMove();
   }
   findActiveSpot(cursorPos) {
     for (let i = 0; i < this.grid.length; i++) {
@@ -81,5 +91,17 @@ export default class Board {
       }
       this.grid.push(row);
     }
+  }
+  tallyAndRemoveSpots() {
+    const points = this.selectedSpots.length;
+    // TODO: Instead of replacing spots in place, they should fall down in their columns
+    this.selectedSpots.forEach(spot => {
+      const { pos } = spot;
+      const replacementSpot = new Spot({ pos, color: randomColor() });
+      this.grid[pos.y][pos.x] = replacementSpot;
+      // this.grid[pos.x].push(replacementSpot);
+    });
+    this.clearMove();
+    return points;
   }
 }

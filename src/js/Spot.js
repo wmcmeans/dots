@@ -4,8 +4,8 @@ export default class Spot {
   constructor({ pos, color }) {
     this.pos = pos;
     this.color = color;
-    // this.setInactive();
-    this.radiusPct = 0.22;
+    this.setInactive();
+    // this.radiusPct = 0.22;
   }
   canConnectWith(otherSpot) {
     const neighbor = this.isNeighboring(otherSpot.pos);
@@ -36,10 +36,6 @@ export default class Spot {
     });
   }
   setActive() {
-    // document.addEventListener('mousemove', (e) => (
-    //   this.cursorPos = getCursorPos(this.ctx.canvas, e)
-    // ));
-    this.active = true;
     this.isHead = true;
     this.radiusPct = 0.25;
   }
@@ -52,7 +48,7 @@ export default class Spot {
   }
   setInactive() {
     this.isHead = false;
-    // this.radiusPct = 0.22;
+    this.radiusPct = 0.22;
   }
   isMouseOver(cursorPos) {
     const dx = cursorPos.x - this.canvasPos.cx;

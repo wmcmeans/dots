@@ -11,6 +11,7 @@ export default class SpotsGame {
     this.trackCursor();
 
     this.board = new Board();
+    this.score = 0;
   }
   beginMove() {
     this.moving = true;
@@ -18,8 +19,10 @@ export default class SpotsGame {
   }
   endMove() {
     this.moving = false;
-    this.board.endMove();
-    console.log('ending');
+    const points = this.board.endMove();
+    if (points) {
+      this.score += points;
+    }
   }
   render() {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);

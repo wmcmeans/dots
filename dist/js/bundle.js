@@ -231,8 +231,14 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Spot = function Spot() {
+	var Spot = function Spot(_ref) {
+	  var pos = _ref.pos,
+	      color = _ref.color;
+	
 	  _classCallCheck(this, Spot);
+	
+	  this.pos = pos;
+	  this.color = color;
 	};
 	
 	exports.default = Spot;

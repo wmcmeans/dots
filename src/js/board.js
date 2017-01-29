@@ -6,11 +6,15 @@ export default class Board {
     this.selectedSpots = [];
     this.setup();
   }
+  addSpotToMove(spot) {
+    spot.setActive();
+    this.selectedSpots.push(spot);
+  }
   beginMove(cursorPos) {
     const firstSpot = this.findActiveSpot(cursorPos);
-    if (!firstSpot) return false;
-
-    this.selectedSpots.push(firstSpot);
+    if (firstSpot) {
+      this.addSpotToMove(firstSpot);
+    }
   }
   draw(ctx, cursorPos) {
     this.squareSize = ctx.canvas.offsetWidth / this.grid.length;

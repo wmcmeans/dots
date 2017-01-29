@@ -215,12 +215,18 @@
 	  }
 	
 	  _createClass(Board, [{
+	    key: 'addSpotToMove',
+	    value: function addSpotToMove(spot) {
+	      spot.setActive();
+	      this.selectedSpots.push(spot);
+	    }
+	  }, {
 	    key: 'beginMove',
 	    value: function beginMove(cursorPos) {
 	      var firstSpot = this.findActiveSpot(cursorPos);
-	      if (!firstSpot) return false;
-	
-	      this.selectedSpots.push(firstSpot);
+	      if (firstSpot) {
+	        this.addSpotToMove(firstSpot);
+	      }
 	    }
 	  }, {
 	    key: 'draw',
@@ -295,6 +301,7 @@
 	
 	    this.pos = pos;
 	    this.color = color;
+	    this.setInactive();
 	  }
 	
 	  _createClass(Spot, [{
@@ -312,12 +319,22 @@
 	      ctx.fill();
 	    }
 	  }, {
+	    key: "setActive",
+	    value: function setActive() {
+	      this.radiusPct = 0.25;
+	    }
+	  }, {
+	    key: "setInactive",
+	    value: function setInactive() {
+	      this.radiusPct = 0.22;
+	    }
+	  }, {
 	    key: "setCanvasPos",
 	    value: function setCanvasPos(sizeOfSpace) {
 	      this.canvasPos = {
 	        cx: this.pos.x * sizeOfSpace + sizeOfSpace / 2,
 	        cy: this.pos.y * sizeOfSpace + sizeOfSpace / 2,
-	        radius: sizeOfSpace * 0.22
+	        radius: sizeOfSpace * this.radiusPct
 	      };
 	    }
 	  }, {

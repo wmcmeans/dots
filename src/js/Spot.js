@@ -2,6 +2,7 @@ export default class Spot {
   constructor({ pos, color }) {
     this.pos = pos;
     this.color = color;
+    this.setInactive();
   }
   draw(ctx, sizeOfSpace, cursorPos) {
     this.setCanvasPos(sizeOfSpace);
@@ -15,11 +16,17 @@ export default class Spot {
     ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.canvasPos.radius, 0, Math.PI * 2);
     ctx.fill();
   }
+  setActive() {
+    this.radiusPct = 0.25;
+  }
+  setInactive() {
+    this.radiusPct = 0.22;
+  }
   setCanvasPos(sizeOfSpace) {
     this.canvasPos = {
       cx: this.pos.x * sizeOfSpace + (sizeOfSpace / 2),
       cy: this.pos.y * sizeOfSpace + (sizeOfSpace / 2),
-      radius: sizeOfSpace * 0.22,
+      radius: sizeOfSpace * this.radiusPct,
     };
   }
   isMouseOver(cursorPos) {

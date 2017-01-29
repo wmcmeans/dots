@@ -1,5 +1,4 @@
-// import SpotsGame from './game';
-import SpotsGame from './spotsGame';
+import SpotsGame from './Game';
 import { queryEl } from './util';
 
 document.addEventListener('DOMContentLoaded', () => {

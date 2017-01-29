@@ -17,6 +17,15 @@ span, article, footer, time, small {
   background: transparent;
   list-style: none; }
 
+.canvas-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; }
+
+.spots-canvas {
+  height: 600px;
+  width: 600px; }
+
 h1.game-title {
   margin-top: 10px;
   font-family: 'Fredoka One';

@@ -18,9 +18,15 @@ span, article, footer, time, small {
   list-style: none;
 }
 
+.canvas-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .spots-canvas {
-    height: 600px;
-    width: 600px;
+  height: 600px;
+  width: 600px;
 }
 
 

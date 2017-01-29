@@ -1,56 +1,25 @@
-var Game = function (board, moves) {
-  this.board = board;
-  this.moves = moves || 30;
-  this.score = 0;
+import Board from './Board';
+import View from './View';
 
-};
-
-Game.prototype.scoreDots = function () {
-  var points = this.board.selectedDots.length;
-  if (points > 1) {
-    this.board.adjustForSquares();
-    this.score += points;
-    this.moves -= 1;
-    this.board.update();
+export default class SpotsGame {
+  constructor(canvas) {
+    this.xDim = canvas.offsetWidth;
+    this.yDim = canvas.offsetHeight;
+    this.ctx = canvas.getContext('2d');
   }
+  render() {
+    // clear board
+    this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 
-  this.board.resetSelections();
-  return points;
-};
-
-Game.prototype.clearMove = function () {
-  this.board.resetSelections();
-};
-
-Game.prototype.beginMove = function (spotPos) {
-  var startSpot = this.board.grid[spotPos[0]][spotPos[1]];
-
-  startSpot.isHead = true;
-  this.board.selectedDots = [startSpot];
-  this.selectedColor = startSpot.color;
-};
-
-Game.prototype.addSpotToSelection = function (spotPos) {
-  var prevDot = this.board.selectionTail();
-  if (spotPos[0] === prevDot.pos[0] && spotPos[1] === prevDot.pos[1]) {
-    return false;
+    // change this to render the view using the board (logic)
+    this.ctx.fillStyle = 'gray';
+    this.ctx.fillRect(0, 0, 500, 500);
   }
-
-  var newDot = this.board.grid[spotPos[0]][spotPos[1]];
-  if (prevDot.canConnectWith(newDot)) {
-    this.board.formConnection(newDot);
-    return true;
+  start() {
+    const animate = () => {
+      this.render();
+      requestAnimationFrame(animate);
+    };
+    animate();
   }
-};
-
-Game.prototype.revertSelection = function () {
-  this.board.removeLastConnection();
-};
-
-Game.prototype.over = function () {
-  return this.moves <= 0;
-};
-
-
-
-module.exports = Game;
+}

@@ -3,21 +3,31 @@ export default class Spot {
     this.pos = pos;
     this.color = color;
   }
-  draw(ctx) {
-    // TODO: instead of dividing by six, come up with a less brittle way of getting
-    // the number of spots per row/col
-    const sizeOfSpace = ctx.canvas.offsetWidth / 6;
-    const center = sizeOfSpace / 2;
+  draw(ctx, sizeOfSpace, cursorPos) {
+    this.setCanvasPos(sizeOfSpace);
+
+    // testing
+    // console.log(cursorPos);
+    if (this.isMouseOver(cursorPos)) {
+      console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
+    }
+
 
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(
-      this.pos.x * sizeOfSpace + center,
-      this.pos.y * sizeOfSpace + center,
-      sizeOfSpace * 0.22,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.canvasPos.radius, 0, Math.PI * 2);
     ctx.fill();
+  }
+  setCanvasPos(sizeOfSpace) {
+    this.canvasPos = {
+      cx: this.pos.x * sizeOfSpace + (sizeOfSpace / 2),
+      cy: this.pos.y * sizeOfSpace + (sizeOfSpace / 2),
+      radius: sizeOfSpace * 0.22,
+    };
+  }
+  isMouseOver(cursorPos) {
+    const dx = cursorPos.x - this.canvasPos.cx;
+    const dy = cursorPos.y - this.canvasPos.cy;
+    return (dx * dx + dy * dy) <= (this.canvasPos.radius * this.canvasPos.radius);
   }
 }

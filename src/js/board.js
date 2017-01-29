@@ -6,9 +6,11 @@ export default class Board {
     this.selectedSpots = [];
     this.setup();
   }
-  draw(ctx) {
+  draw(ctx, cursorPos) {
+    const sizeOfSpace = ctx.canvas.offsetWidth / this.grid.length;
+
     this.grid.forEach(row => (
-      row.forEach(spot => spot.draw(ctx))
+      row.forEach(spot => spot.draw(ctx, sizeOfSpace, cursorPos))
     ));
   }
   setup() {

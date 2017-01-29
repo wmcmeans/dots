@@ -102,10 +102,6 @@
 	
 	var _Board2 = _interopRequireDefault(_Board);
 	
-	var _View = __webpack_require__(6);
-	
-	var _View2 = _interopRequireDefault(_View);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -118,6 +114,8 @@
 	    this.yDim = canvas.offsetHeight;
 	    this.ctx = canvas.getContext('2d');
 	
+	    this.trackCursor();
+	
 	    this.board = new _Board2.default();
 	  }
 	
@@ -126,7 +124,7 @@
 	    value: function render() {
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 	
-	      this.board.draw(this.ctx);
+	      this.board.draw(this.ctx, this.cursorPos);
 	    }
 	  }, {
 	    key: 'start',
@@ -138,6 +136,24 @@
 	        requestAnimationFrame(animate);
 	      };
 	      animate();
+	    }
+	  }, {
+	    key: 'trackCursor',
+	    value: function trackCursor() {
+	      var _this2 = this;
+	
+	      this.cursorPos = { x: 0, y: 0 };
+	      var getCursorPos = function getCursorPos(event) {
+	        event.preventDefault();
+	        event.stopPropagation();
+	
+	        // parseInt????
+	        var x = event.clientX - _this2.ctx.canvas.offsetLeft;
+	        var y = event.clientY - _this2.ctx.canvas.offsetTop;
+	        _this2.cursorPos = { x: x, y: y };
+	      };
+	
+	      document.addEventListener('mousemove', getCursorPos);
 	    }
 	  }]);
 	
@@ -178,10 +194,12 @@
 	
 	  _createClass(Board, [{
 	    key: 'draw',
-	    value: function draw(ctx) {
+	    value: function draw(ctx, cursorPos) {
+	      var sizeOfSpace = ctx.canvas.offsetWidth / this.grid.length;
+	
 	      this.grid.forEach(function (row) {
 	        return row.forEach(function (spot) {
-	          return spot.draw(ctx);
+	          return spot.draw(ctx, sizeOfSpace, cursorPos);
 	        });
 	      });
 	    }
@@ -210,24 +228,7 @@
 	exports.default = Board;
 
 /***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var View = function View() {
-	  _classCallCheck(this, View);
-	};
-	
-	exports.default = View;
-
-/***/ },
+/* 6 */,
 /* 7 */
 /***/ function(module, exports) {
 
@@ -254,16 +255,35 @@
 	
 	  _createClass(Spot, [{
 	    key: "draw",
-	    value: function draw(ctx) {
-	      // TODO: instead of dividing by six, come up with a less brittle way of getting
-	      // the number of spots per row/col
-	      var sizeOfSpace = ctx.canvas.offsetWidth / 6;
-	      var center = sizeOfSpace / 2;
+	    value: function draw(ctx, sizeOfSpace, cursorPos) {
+	      this.setCanvasPos(sizeOfSpace);
+	
+	      // testing
+	      // console.log(cursorPos);
+	      if (this.isMouseOver(cursorPos)) {
+	        console.log("mouse over [" + this.pos.x + ", " + this.pos.y + "] (" + this.color + ")");
+	      }
 	
 	      ctx.fillStyle = this.color;
 	      ctx.beginPath();
-	      ctx.arc(this.pos.x * sizeOfSpace + center, this.pos.y * sizeOfSpace + center, sizeOfSpace * 0.22, 0, Math.PI * 2);
+	      ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.canvasPos.radius, 0, Math.PI * 2);
 	      ctx.fill();
+	    }
+	  }, {
+	    key: "setCanvasPos",
+	    value: function setCanvasPos(sizeOfSpace) {
+	      this.canvasPos = {
+	        cx: this.pos.x * sizeOfSpace + sizeOfSpace / 2,
+	        cy: this.pos.y * sizeOfSpace + sizeOfSpace / 2,
+	        radius: sizeOfSpace * 0.22
+	      };
+	    }
+	  }, {
+	    key: "isMouseOver",
+	    value: function isMouseOver(cursorPos) {
+	      var dx = cursorPos.x - this.canvasPos.cx;
+	      var dy = cursorPos.y - this.canvasPos.cy;
+	      return dx * dx + dy * dy <= this.canvasPos.radius * this.canvasPos.radius;
 	    }
 	  }]);
 	

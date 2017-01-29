@@ -62,18 +62,27 @@
 /***/ },
 /* 1 */,
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	
+	var _constants = __webpack_require__(8);
+	
 	var queryEl = exports.queryEl = function queryEl(selector) {
 	  return document.querySelector(selector);
 	};
 	var queryElAll = exports.queryElAll = function queryElAll(selector) {
 	  return document.querySelectorAll(selector);
+	};
+	
+	var randomColor = exports.randomColor = function randomColor() {
+	  var idx = Math.floor(Math.random() * 5);
+	  return _constants.colorsArray[idx];
 	};
 
 /***/ },
@@ -118,7 +127,7 @@
 	
 	      // change this to render the view using the board (logic)
 	      this.ctx.fillStyle = 'gray';
-	      this.ctx.fillRect(0, 0, 500, 500);
+	      this.ctx.fillRect(0, 0, 20, 20);
 	    }
 	  }, {
 	    key: 'start',
@@ -140,19 +149,55 @@
 
 /***/ },
 /* 5 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Spot = __webpack_require__(7);
+	
+	var _Spot2 = _interopRequireDefault(_Spot);
+	
+	var _util = __webpack_require__(2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Board = function Board() {
-	  _classCallCheck(this, Board);
-	};
+	var Board = function () {
+	  function Board() {
+	    _classCallCheck(this, Board);
+	
+	    this.selectedSpots = [];
+	    this.setup();
+	  }
+	
+	  _createClass(Board, [{
+	    key: 'setup',
+	    value: function setup() {
+	      this.grid = [];
+	
+	      for (var x = 0; x < 6; x++) {
+	        var column = [];
+	        for (var y = 0; y < 6; y++) {
+	          var spot = new _Spot2.default({
+	            pos: [x, y],
+	            color: (0, _util.randomColor)()
+	          });
+	          column.push(spot);
+	        }
+	        this.grid.push(column);
+	      }
+	    }
+	  }]);
+	
+	  return Board;
+	}();
 	
 	exports.default = Board;
 
@@ -173,6 +218,43 @@
 	};
 	
 	exports.default = View;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Spot = function Spot() {
+	  _classCallCheck(this, Spot);
+	};
+	
+	exports.default = Spot;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var colors = exports.colors = {
+	  PURPLE: 'purple',
+	  GREEN: 'green',
+	  BLUE: 'blue',
+	  RED: 'red',
+	  YELLOW: 'yellow'
+	};
+	
+	var colorsArray = exports.colorsArray = Object.values(colors);
 
 /***/ }
 /******/ ]);

@@ -13,7 +13,7 @@ export default class SpotsGame {
 
     // change this to render the view using the board (logic)
     this.ctx.fillStyle = 'gray';
-    this.ctx.fillRect(0, 0, 500, 500);
+    this.ctx.fillRect(0, 0, 20, 20);
   }
   start() {
     const animate = () => {

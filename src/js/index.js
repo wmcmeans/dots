@@ -1,7 +1,8 @@
-import DotsView from './dotsView';
+// import SpotsGame from './game';
+import SpotsGame from './spotsGame';
 import { queryEl } from './util';
 
-document.on('DOMContentLoaded', () => {
-  const rootEl = queryEl('.dots-game');
-  new DotsView(rootEl);
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = queryEl('#spots-game');
+  new SpotsGame(canvas).start();
 });

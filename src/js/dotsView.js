@@ -1,8 +1,9 @@
-var Board = require('./board.js');
-var Game = require('./game.js');
+import Board from './board';
+import Game from './game';
+import { queryEl, querElAll } from './util';
 
-var View = function ($el) {
-  this.$el = $el;
+function View (el) {
+  this.el = el;
 
   this.renderMenu();
 };
@@ -21,9 +22,9 @@ View.prototype.renderGame = function (event) {
   this.setupGrid();
   this.render();
 
-  $('.dots-game').on("mousedown vmousedown", this.beginMove.bind(this));
-  $(window).on("mouseup vmouseup", this.endMove.bind(this));
-  $('.directions-link').click(this.renderMenu.bind(this));
+  queryEl('.dots-game').addEventListener('mousedown', this.beginMove.bind(this));
+  queryEl(window).addEventListener('mouseup', this.endMove.bind(this));
+  queryEl('.directions-link').addEventListener('click', this.renderMenu.bind(this));
 };
 
 View.prototype.beginMove = function (event) {
@@ -37,7 +38,7 @@ View.prototype.beginMove = function (event) {
   var game = this.game;
 
   game.beginMove(dotPos);
-  $(event.target).addClass('active');
+  queryEl(event.target).addClass('active');
 
   $('div.' + this.game.selectedColor).on("mouseenter touchenter", function(e) {
     var newPos = [parseInt(e.target.id[0]), parseInt(e.target.id[2])];
@@ -224,7 +225,7 @@ View.prototype.renderMenu = function () {
   } else {
     html = this.getDirectionsHTML();
   }
-  this.$el.html(html);
+  this.el.innerHtml = html;
 
   $('button.new-game').click(this.newGame.bind(this));
   $('button.back-to-game').click(this.renderGame.bind(this));
@@ -236,9 +237,9 @@ View.prototype.setupScoreBoard = function () {
       html +=   "<span class='moves-left'></span>";
       html +=   "<span class='score'></span>";
       html += "</h2>";
-  this.$el.html(html);
-  this.$moves = this.$el.find('.moves-left');
-  this.$score = this.$el.find('.score');
+  this.el.html(html);
+  this.$moves = this.el.find('.moves-left');
+  this.$score = this.el.find('.score');
 };
 
 View.prototype.setupGrid = function () {
@@ -277,12 +278,12 @@ View.prototype.setupGrid = function () {
   board += verticalConnections;
   board += "</figure>";
 
-  this.$el.append(board);
-  this.$spot = this.$el.find("div.spot");
-  this.$connections = this.$el.find("li.connection");
+  this.el.append(board);
+  this.$spot = this.el.find("div.spot");
+  this.$connections = this.el.find("li.connection");
 };
 
-closestEdge = function (event) {
+function closestEdge(event) {
   return closestEdgeFromDimensions(
     event.pageX - $(event.target).offset().left,
     event.pageY - $(event.target).offset().top,
@@ -291,7 +292,7 @@ closestEdge = function (event) {
   );
 };
 
-closestEdgeFromDimensions = function (x,y,w,h) {
+function closestEdgeFromDimensions(x,y,w,h) {
   var topEdgeDist = distMetric(x,y,w/2,0);
   var bottomEdgeDist = distMetric(x,y,w/2,h);
   var leftEdgeDist = distMetric(x,y,0,h/2);
@@ -310,7 +311,7 @@ closestEdgeFromDimensions = function (x,y,w,h) {
   }
 };
 
-var distMetric = function (x,y,x2,y2) {
+function distMetric(x,y,x2,y2) {
   var xDiff = x - x2;
   var yDiff = y - y2;
   return (xDiff * xDiff) + (yDiff * yDiff);

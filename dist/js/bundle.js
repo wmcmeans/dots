@@ -117,17 +117,16 @@
 	    this.xDim = canvas.offsetWidth;
 	    this.yDim = canvas.offsetHeight;
 	    this.ctx = canvas.getContext('2d');
+	
+	    this.board = new _Board2.default();
 	  }
 	
 	  _createClass(SpotsGame, [{
 	    key: 'render',
 	    value: function render() {
-	      // clear board
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 	
-	      // change this to render the view using the board (logic)
-	      this.ctx.fillStyle = 'gray';
-	      this.ctx.fillRect(0, 0, 20, 20);
+	      this.board.draw(this.ctx);
 	    }
 	  }, {
 	    key: 'start',
@@ -178,20 +177,29 @@
 	  }
 	
 	  _createClass(Board, [{
+	    key: 'draw',
+	    value: function draw(ctx) {
+	      this.grid.forEach(function (row) {
+	        return row.forEach(function (spot) {
+	          return spot.draw(ctx);
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'setup',
 	    value: function setup() {
 	      this.grid = [];
 	
-	      for (var x = 0; x < 6; x++) {
-	        var column = [];
-	        for (var y = 0; y < 6; y++) {
+	      for (var y = 0; y < 6; y++) {
+	        var row = [];
+	        for (var x = 0; x < 6; x++) {
 	          var spot = new _Spot2.default({
-	            pos: [x, y],
+	            pos: { x: x, y: y },
 	            color: (0, _util.randomColor)()
 	          });
-	          column.push(spot);
+	          row.push(spot);
 	        }
-	        this.grid.push(column);
+	        this.grid.push(row);
 	      }
 	    }
 	  }]);
@@ -229,17 +237,38 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Spot = function Spot(_ref) {
-	  var pos = _ref.pos,
-	      color = _ref.color;
+	var Spot = function () {
+	  function Spot(_ref) {
+	    var pos = _ref.pos,
+	        color = _ref.color;
 	
-	  _classCallCheck(this, Spot);
+	    _classCallCheck(this, Spot);
 	
-	  this.pos = pos;
-	  this.color = color;
-	};
+	    this.pos = pos;
+	    this.color = color;
+	  }
+	
+	  _createClass(Spot, [{
+	    key: "draw",
+	    value: function draw(ctx) {
+	      // TODO: instead of dividing by six, come up with a less brittle way of getting
+	      // the number of spots per row/col
+	      var sizeOfSpace = ctx.canvas.offsetWidth / 6;
+	      var center = sizeOfSpace / 2;
+	
+	      ctx.fillStyle = this.color;
+	      ctx.beginPath();
+	      ctx.arc(this.pos.x * sizeOfSpace + center, this.pos.y * sizeOfSpace + center, sizeOfSpace * 0.22, 0, Math.PI * 2);
+	      ctx.fill();
+	    }
+	  }]);
+	
+	  return Spot;
+	}();
 	
 	exports.default = Spot;
 
@@ -253,11 +282,11 @@
 	  value: true
 	});
 	var colors = exports.colors = {
-	  PURPLE: 'purple',
-	  GREEN: 'green',
-	  BLUE: 'blue',
-	  RED: 'red',
-	  YELLOW: 'yellow'
+	  PURPLE: '#9d5ab7',
+	  GREEN: '#89ed90',
+	  BLUE: '#8abdff',
+	  RED: '#f15c3b',
+	  YELLOW: '#e7dd00'
 	};
 	
 	var colorsArray = exports.colorsArray = Object.values(colors);

@@ -6,19 +6,24 @@ export default class Board {
     this.selectedSpots = [];
     this.setup();
   }
+  draw(ctx) {
+    this.grid.forEach(row => (
+      row.forEach(spot => spot.draw(ctx))
+    ));
+  }
   setup() {
     this.grid = [];
 
-    for (let x = 0; x < 6; x++) {
-      const column = [];
-      for (let y = 0; y < 6; y++) {
+    for (let y = 0; y < 6; y++) {
+      const row = [];
+      for (let x = 0; x < 6; x++) {
         const spot = new Spot({
-          pos: [x, y],
+          pos: { x, y },
           color: randomColor(),
         });
-        column.push(spot);
+        row.push(spot);
       }
-      this.grid.push(column);
+      this.grid.push(row);
     }
   }
 }

@@ -1,5 +1,5 @@
 import Board from './Board';
-import { fixCanvasBlur } from './util';
+import { fixCanvasBlur, getCursorPos } from './util';
 
 export default class SpotsGame {
   constructor(canvas) {
@@ -18,6 +18,7 @@ export default class SpotsGame {
   }
   endMove() {
     this.moving = false;
+    this.board.endMove();
     console.log('ending');
   }
   render() {
@@ -35,16 +36,10 @@ export default class SpotsGame {
   }
   trackCursor() {
     this.cursorPos = { x: 0, y: 0 };
-    const getCursorPos = (event) => {
-      event.preventDefault();
-      event.stopPropagation();
 
-      const x = event.clientX - this.ctx.canvas.offsetLeft;
-      const y = event.clientY - this.ctx.canvas.offsetTop;
-      this.cursorPos = { x, y };
-    };
-
-    document.addEventListener('mousemove', getCursorPos);
+    document.addEventListener('mousemove', (e) => (
+      this.cursorPos = getCursorPos(this.ctx.canvas, e)
+    ));
   }
   trackMoves() {
     this.ctx.canvas.addEventListener('mousedown', () => this.beginMove());

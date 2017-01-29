@@ -69,7 +69,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
 	
 	var _constants = __webpack_require__(8);
 	
@@ -123,6 +123,15 @@
 	    context.scale(ratio, ratio);
 	  }
 	};
+	
+	var getCursorPos = exports.getCursorPos = function getCursorPos(canvas, event) {
+	  event.preventDefault();
+	  event.stopPropagation();
+	
+	  var x = event.clientX - canvas.offsetLeft;
+	  var y = event.clientY - canvas.offsetTop;
+	  return { x: x, y: y };
+	};
 
 /***/ },
 /* 3 */,
@@ -171,6 +180,7 @@
 	    key: 'endMove',
 	    value: function endMove() {
 	      this.moving = false;
+	      this.board.endMove();
 	      console.log('ending');
 	    }
 	  }, {
@@ -198,16 +208,10 @@
 	      var _this2 = this;
 	
 	      this.cursorPos = { x: 0, y: 0 };
-	      var getCursorPos = function getCursorPos(event) {
-	        event.preventDefault();
-	        event.stopPropagation();
 	
-	        var x = event.clientX - _this2.ctx.canvas.offsetLeft;
-	        var y = event.clientY - _this2.ctx.canvas.offsetTop;
-	        _this2.cursorPos = { x: x, y: y };
-	      };
-	
-	      document.addEventListener('mousemove', getCursorPos);
+	      document.addEventListener('mousemove', function (e) {
+	        return _this2.cursorPos = (0, _util.getCursorPos)(_this2.ctx.canvas, e);
+	      });
 	    }
 	  }, {
 	    key: 'trackMoves',
@@ -349,7 +353,8 @@
 	
 	    this.pos = pos;
 	    this.color = color;
-	    this.setInactive();
+	    // this.setInactive();
+	    this.radiusPct = 0.22;
 	  }
 	
 	  _createClass(Spot, [{
@@ -365,8 +370,10 @@
 	    value: function draw(ctx, sizeOfSpace, cursorPos) {
 	      this.setCanvasPos(sizeOfSpace);
 	
-	      if (this.isMouseOver(cursorPos)) {
-	        console.log('mouse over [' + this.pos.x + ', ' + this.pos.y + '] (' + this.color + ')');
+	      if (this.isHead && !this.isMouseOver(cursorPos)) {
+	        // console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
+	        console.log('mouse exited [' + this.pos.x + ', ' + this.pos.y + '] (' + this.color + ')');
+	        this.setInactive();
 	      }
 	
 	      ctx.fillStyle = this.color;
@@ -395,6 +402,11 @@
 	  }, {
 	    key: 'setActive',
 	    value: function setActive() {
+	      // document.addEventListener('mousemove', (e) => (
+	      //   this.cursorPos = getCursorPos(this.ctx.canvas, e)
+	      // ));
+	      this.active = true;
+	      this.isHead = true;
 	      this.radiusPct = 0.25;
 	    }
 	  }, {
@@ -409,7 +421,8 @@
 	  }, {
 	    key: 'setInactive',
 	    value: function setInactive() {
-	      this.radiusPct = 0.22;
+	      // this.isHead = false;
+	      // this.radiusPct = 0.22;
 	    }
 	  }, {
 	    key: 'isMouseOver',

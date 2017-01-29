@@ -4,7 +4,8 @@ export default class Spot {
   constructor({ pos, color }) {
     this.pos = pos;
     this.color = color;
-    this.setInactive();
+    // this.setInactive();
+    this.radiusPct = 0.22;
   }
   canConnectWith(otherDot) {
     const neighbor = this.isNeighboring(otherDot.pos);
@@ -15,8 +16,10 @@ export default class Spot {
   draw(ctx, sizeOfSpace, cursorPos) {
     this.setCanvasPos(sizeOfSpace);
 
-    if (this.isMouseOver(cursorPos)) {
-      console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
+    if (this.isHead && !this.isMouseOver(cursorPos)) {
+      // console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
+      console.log(`mouse exited [${this.pos.x}, ${this.pos.y}] (${this.color})`);
+      this.setInactive();
     }
 
     ctx.fillStyle = this.color;
@@ -33,6 +36,11 @@ export default class Spot {
     });
   }
   setActive() {
+    // document.addEventListener('mousemove', (e) => (
+    //   this.cursorPos = getCursorPos(this.ctx.canvas, e)
+    // ));
+    this.active = true;
+    this.isHead = true;
     this.radiusPct = 0.25;
   }
   setCanvasPos(sizeOfSpace) {
@@ -43,7 +51,8 @@ export default class Spot {
     };
   }
   setInactive() {
-    this.radiusPct = 0.22;
+    // this.isHead = false;
+    // this.radiusPct = 0.22;
   }
   isMouseOver(cursorPos) {
     const dx = cursorPos.x - this.canvasPos.cx;

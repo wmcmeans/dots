@@ -50,3 +50,12 @@ export const fixCanvasBlur = (canvas) => {
     context.scale(ratio, ratio);
   }
 };
+
+export const getCursorPos = (canvas, event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const x = event.clientX - canvas.offsetLeft;
+  const y = event.clientY - canvas.offsetTop;
+  return { x, y };
+};

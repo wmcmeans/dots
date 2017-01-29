@@ -248,6 +248,10 @@
 	
 	var _Spot2 = _interopRequireDefault(_Spot);
 	
+	var _Line = __webpack_require__(9);
+	
+	var _Line2 = _interopRequireDefault(_Line);
+	
 	var _util = __webpack_require__(2);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -259,6 +263,7 @@
 	    _classCallCheck(this, Board);
 	
 	    this.selectedSpots = [];
+	    this.lines = [];
 	    this.setup();
 	  }
 	
@@ -266,14 +271,19 @@
 	    key: 'addSpotToMove',
 	    value: function addSpotToMove(spot) {
 	      spot.setActive();
+	      var line = new _Line2.default(spot);
 	      this.selectedSpots.push(spot);
+	      this.lines.push(line);
 	    }
 	  }, {
 	    key: 'beginMove',
 	    value: function beginMove(cursorPos) {
 	      var firstSpot = this.findActiveSpot(cursorPos);
 	      if (firstSpot) {
+	        this.cursorPos = cursorPos;
 	        this.addSpotToMove(firstSpot);
+	      } else {
+	        this.endMove();
 	      }
 	    }
 	  }, {
@@ -288,6 +298,14 @@
 	          return spot.draw(ctx, _this.squareSize, cursorPos);
 	        });
 	      });
+	      this.lines.forEach(function (line) {
+	        return line.draw(ctx, cursorPos);
+	      });
+	    }
+	  }, {
+	    key: 'endMove',
+	    value: function endMove() {
+	      // something
 	    }
 	  }, {
 	    key: 'findActiveSpot',
@@ -372,7 +390,7 @@
 	
 	      if (this.isHead && !this.isMouseOver(cursorPos)) {
 	        // console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
-	        console.log('mouse exited [' + this.pos.x + ', ' + this.pos.y + '] (' + this.color + ')');
+	        // console.log(`mouse exited [${this.pos.x}, ${this.pos.y}] (${this.color})`);
 	        this.setInactive();
 	      }
 	
@@ -463,6 +481,57 @@
 	  bottom: { x: 0, y: -1 },
 	  left: { x: -1, y: 0 }
 	};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Line = function () {
+	  function Line(startSpot) {
+	    _classCallCheck(this, Line);
+	
+	    this.startSpot = startSpot;
+	  }
+	
+	  _createClass(Line, [{
+	    key: 'destroy',
+	    value: function destroy() {
+	      console.log('destroy mee!!!!');
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw(ctx, cursorPos) {
+	      ctx.strokeStyle = this.startSpot.color;
+	      ctx.beginPath();
+	      ctx.moveTo(this.startSpot.canvasPos.cx, this.startSpot.canvasPos.cy);
+	      if (this.endSpot) {
+	        ctx.lineTo(this.endSpot.canvasPos.cx, this.endSpot.canvasPos.cy);
+	      } else {
+	        ctx.lineTo(cursorPos.x, cursorPos.y);
+	      }
+	      ctx.stroke();
+	    }
+	  }, {
+	    key: 'forgeConnection',
+	    value: function forgeConnection(endSpot) {
+	      this.endSpot = endSpot;
+	    }
+	  }]);
+	
+	  return Line;
+	}();
+	
+	exports.default = Line;
 
 /***/ }
 /******/ ]);

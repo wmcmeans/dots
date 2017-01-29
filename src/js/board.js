@@ -1,19 +1,26 @@
 import Spot from './Spot';
+import Line from './Line';
 import { randomColor } from './util';
 
 export default class Board {
   constructor() {
     this.selectedSpots = [];
+    this.lines = [];
     this.setup();
   }
   addSpotToMove(spot) {
     spot.setActive();
+    const line = new Line(spot);
     this.selectedSpots.push(spot);
+    this.lines.push(line);
   }
   beginMove(cursorPos) {
     const firstSpot = this.findActiveSpot(cursorPos);
     if (firstSpot) {
+      this.cursorPos = cursorPos;
       this.addSpotToMove(firstSpot);
+    } else {
+      this.endMove();
     }
   }
   draw(ctx, cursorPos) {
@@ -22,6 +29,10 @@ export default class Board {
     this.grid.forEach(row => (
       row.forEach(spot => spot.draw(ctx, this.squareSize, cursorPos))
     ));
+    this.lines.forEach(line => line.draw(ctx, cursorPos));
+  }
+  endMove() {
+    // something
   }
   findActiveSpot(cursorPos) {
     for (let i = 0; i < this.grid.length; i++) {

@@ -18,7 +18,7 @@ export default class Spot {
 
     if (this.isHead && !this.isMouseOver(cursorPos)) {
       // console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
-      console.log(`mouse exited [${this.pos.x}, ${this.pos.y}] (${this.color})`);
+      // console.log(`mouse exited [${this.pos.x}, ${this.pos.y}] (${this.color})`);
       this.setInactive();
     }
 

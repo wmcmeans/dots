@@ -272,12 +272,17 @@
 	    value: function addSpotToMove(spot) {
 	      spot.setActive();
 	      var line = new _Line2.default(spot);
+	      if (this.selectedSpots.length) {
+	        this.getHeadSpot().setInactive();
+	        this.getHeadLine().forgeConnection(spot);
+	      }
 	      this.selectedSpots.push(spot);
 	      this.lines.push(line);
 	    }
 	  }, {
 	    key: 'beginMove',
 	    value: function beginMove(cursorPos) {
+	      this.moving = true;
 	      var firstSpot = this.findActiveSpot(cursorPos);
 	      if (firstSpot) {
 	        this.cursorPos = cursorPos;
@@ -287,11 +292,24 @@
 	      }
 	    }
 	  }, {
+	    key: 'checkForNewConnections',
+	    value: function checkForNewConnections(cursorPos) {
+	      var activeSpot = this.findActiveSpot(cursorPos);
+	      var head = this.getHeadSpot();
+	      if (activeSpot && activeSpot !== head && head.canConnectWith(activeSpot)) {
+	        this.addSpotToMove(activeSpot);
+	      }
+	    }
+	  }, {
 	    key: 'draw',
 	    value: function draw(ctx, cursorPos) {
 	      var _this = this;
 	
 	      this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
+	
+	      if (this.moving) {
+	        this.checkForNewConnections(cursorPos);
+	      }
 	
 	      this.grid.forEach(function (row) {
 	        return row.forEach(function (spot) {
@@ -305,6 +323,7 @@
 	  }, {
 	    key: 'endMove',
 	    value: function endMove() {
+	      this.moving = false;
 	      // something
 	    }
 	  }, {
@@ -318,6 +337,16 @@
 	      }
 	
 	      return null;
+	    }
+	  }, {
+	    key: 'getHeadLine',
+	    value: function getHeadLine() {
+	      return this.lines[this.lines.length - 1];
+	    }
+	  }, {
+	    key: 'getHeadSpot',
+	    value: function getHeadSpot() {
+	      return this.selectedSpots[this.selectedSpots.length - 1];
 	    }
 	  }, {
 	    key: 'setup',
@@ -377,9 +406,9 @@
 	
 	  _createClass(Spot, [{
 	    key: 'canConnectWith',
-	    value: function canConnectWith(otherDot) {
-	      var neighbor = this.isNeighboring(otherDot.pos);
-	      var sameColor = this.color === otherDot.color;
+	    value: function canConnectWith(otherSpot) {
+	      var neighbor = this.isNeighboring(otherSpot.pos);
+	      var sameColor = this.color === otherSpot.color;
 	
 	      return neighbor && sameColor;
 	    }
@@ -439,7 +468,7 @@
 	  }, {
 	    key: 'setInactive',
 	    value: function setInactive() {
-	      // this.isHead = false;
+	      this.isHead = false;
 	      // this.radiusPct = 0.22;
 	    }
 	  }, {
@@ -512,6 +541,7 @@
 	    key: 'draw',
 	    value: function draw(ctx, cursorPos) {
 	      ctx.strokeStyle = this.startSpot.color;
+	      ctx.lineWidth = 12;
 	      ctx.beginPath();
 	      ctx.moveTo(this.startSpot.canvasPos.cx, this.startSpot.canvasPos.cy);
 	      if (this.endSpot) {

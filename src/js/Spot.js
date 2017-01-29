@@ -7,9 +7,9 @@ export default class Spot {
     // this.setInactive();
     this.radiusPct = 0.22;
   }
-  canConnectWith(otherDot) {
-    const neighbor = this.isNeighboring(otherDot.pos);
-    const sameColor = this.color === otherDot.color;
+  canConnectWith(otherSpot) {
+    const neighbor = this.isNeighboring(otherSpot.pos);
+    const sameColor = this.color === otherSpot.color;
 
     return neighbor && sameColor;
   }
@@ -51,7 +51,7 @@ export default class Spot {
     };
   }
   setInactive() {
-    // this.isHead = false;
+    this.isHead = false;
     // this.radiusPct = 0.22;
   }
   isMouseOver(cursorPos) {

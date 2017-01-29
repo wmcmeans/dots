@@ -11,9 +11,11 @@ export default class SpotsGame {
     this.board = new Board();
   }
   beginMove() {
+    this.moving = true;
     this.board.beginMove(this.cursorPos);
   }
   endMove() {
+    this.moving = false;
     console.log('ending');
   }
   render() {

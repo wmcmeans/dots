@@ -69,7 +69,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
 	
 	var _constants = __webpack_require__(8);
 	
@@ -82,7 +82,22 @@
 	
 	var randomColor = exports.randomColor = function randomColor() {
 	  var idx = Math.floor(Math.random() * 5);
-	  return _constants.colorsArray[idx];
+	  return _constants.COLORS_ARRAY[idx];
+	};
+	
+	var getOppositeDelta = exports.getOppositeDelta = function getOppositeDelta(delta) {
+	  switch (delta) {
+	    case 'top':
+	      return 'bottom';
+	    case 'right':
+	      return 'left';
+	    case 'bottom':
+	      return 'top';
+	    case 'left':
+	      return 'right';
+	    default:
+	      throw new Error('delta not found in list of deltas');
+	  }
 	};
 
 /***/ },
@@ -122,11 +137,13 @@
 	  _createClass(SpotsGame, [{
 	    key: 'beginMove',
 	    value: function beginMove() {
+	      this.moving = true;
 	      this.board.beginMove(this.cursorPos);
 	    }
 	  }, {
 	    key: 'endMove',
 	    value: function endMove() {
+	      this.moving = false;
 	      console.log('ending');
 	    }
 	  }, {
@@ -280,15 +297,19 @@
 /***/ },
 /* 6 */,
 /* 7 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(8);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -305,12 +326,20 @@
 	  }
 	
 	  _createClass(Spot, [{
-	    key: "draw",
+	    key: 'canConnectWith',
+	    value: function canConnectWith(otherDot) {
+	      var neighbor = this.isNeighboring(otherDot.pos);
+	      var sameColor = this.color === otherDot.color;
+	
+	      return neighbor && sameColor;
+	    }
+	  }, {
+	    key: 'draw',
 	    value: function draw(ctx, sizeOfSpace, cursorPos) {
 	      this.setCanvasPos(sizeOfSpace);
 	
 	      if (this.isMouseOver(cursorPos)) {
-	        console.log("mouse over [" + this.pos.x + ", " + this.pos.y + "] (" + this.color + ")");
+	        console.log('mouse over [' + this.pos.x + ', ' + this.pos.y + '] (' + this.color + ')');
 	      }
 	
 	      ctx.fillStyle = this.color;
@@ -319,17 +348,30 @@
 	      ctx.fill();
 	    }
 	  }, {
-	    key: "setActive",
+	    key: 'isNeighboring',
+	    value: function isNeighboring(otherPos) {
+	      var _this = this;
+	
+	      return Object.entries(_constants.DELTAS).find(function (_ref2) {
+	        var _ref3 = _slicedToArray(_ref2, 2),
+	            delta = _ref3[0],
+	            _ref3$ = _ref3[1],
+	            x = _ref3$.x,
+	            y = _ref3$.y;
+	
+	        if (_this.pos.x + x === otherPos.x && _this.pos.y + y === otherPos.y) {
+	          return delta;
+	        }
+	        return false;
+	      });
+	    }
+	  }, {
+	    key: 'setActive',
 	    value: function setActive() {
 	      this.radiusPct = 0.25;
 	    }
 	  }, {
-	    key: "setInactive",
-	    value: function setInactive() {
-	      this.radiusPct = 0.22;
-	    }
-	  }, {
-	    key: "setCanvasPos",
+	    key: 'setCanvasPos',
 	    value: function setCanvasPos(sizeOfSpace) {
 	      this.canvasPos = {
 	        cx: this.pos.x * sizeOfSpace + sizeOfSpace / 2,
@@ -338,7 +380,12 @@
 	      };
 	    }
 	  }, {
-	    key: "isMouseOver",
+	    key: 'setInactive',
+	    value: function setInactive() {
+	      this.radiusPct = 0.22;
+	    }
+	  }, {
+	    key: 'isMouseOver',
 	    value: function isMouseOver(cursorPos) {
 	      var dx = cursorPos.x - this.canvasPos.cx;
 	      var dy = cursorPos.y - this.canvasPos.cy;
@@ -360,7 +407,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var colors = exports.colors = {
+	var COLORS = exports.COLORS = {
 	  PURPLE: '#9d5ab7',
 	  GREEN: '#89ed90',
 	  BLUE: '#8abdff',
@@ -368,7 +415,14 @@
 	  YELLOW: '#e7dd00'
 	};
 	
-	var colorsArray = exports.colorsArray = Object.values(colors);
+	var COLORS_ARRAY = exports.COLORS_ARRAY = Object.values(COLORS);
+	
+	var DELTAS = exports.DELTAS = {
+	  top: { x: 0, y: 1 },
+	  right: { x: 1, y: 0 },
+	  bottom: { x: 0, y: -1 },
+	  left: { x: -1, y: 0 }
+	};
 
 /***/ }
 /******/ ]);

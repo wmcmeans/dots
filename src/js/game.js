@@ -1,5 +1,5 @@
 import Board from './Board';
-import { fixCanvasBlur, getCursorPos } from './util';
+import { fixCanvasBlur, getCursorPos, queryEl } from './util';
 
 export default class SpotsGame {
   constructor(canvas) {
@@ -11,7 +11,7 @@ export default class SpotsGame {
     this.trackCursor();
 
     this.board = new Board();
-    this.score = 0;
+    this.setupScoreBoard();
   }
   beginMove() {
     this.moving = true;
@@ -21,13 +21,22 @@ export default class SpotsGame {
     this.moving = false;
     const points = this.board.endMove();
     if (points) {
-      this.score += points;
+      this.updateScore(points);
     }
   }
   render() {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 
     this.board.draw(this.ctx, this.cursorPos);
+  }
+  setupScoreBoard() {
+    this.gameTracker = {
+      score: queryEl('#score'),
+      movesLeft: queryEl('#moves-left'),
+    };
+    this.score = 0;
+    this.movesLeft = 31;
+    this.updateScore();
   }
   start() {
     const animate = () => {
@@ -47,5 +56,12 @@ export default class SpotsGame {
   trackMoves() {
     this.ctx.canvas.addEventListener('mousedown', () => this.beginMove());
     window.addEventListener('mouseup', () => this.endMove());
+  }
+  updateScore(points = 0) {
+    this.score += points;
+    this.movesLeft -= 1;
+    this.gameTracker.score.textContent = this.score;
+    this.gameTracker.movesLeft.textContent = this.movesLeft;
+    console.log(this.score);
   }
 }

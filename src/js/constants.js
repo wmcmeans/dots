@@ -1,9 +1,9 @@
 export const COLORS = {
-  PURPLE: '#9d5ab7',
-  GREEN: '#89ed90',
-  BLUE: '#8abdff',
-  RED: '#f15c3b',
-  YELLOW: '#e7dd00',
+  PURPLE: 'rgba(157, 90, 184, 1)',
+  GREEN: 'rgba(138, 237, 145, 1)',
+  BLUE: 'rgba(138, 189, 255, 1)',
+  RED: 'rgba(241, 92, 59, 1)',
+  YELLOW: 'rgba(231, 221, 0, 1)',
 };
 
 export const COLORS_ARRAY = Object.values(COLORS);

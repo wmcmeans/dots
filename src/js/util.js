@@ -59,3 +59,8 @@ export const getCursorPos = (canvas, event) => {
   const y = event.clientY - canvas.offsetTop;
   return { x, y };
 };
+
+export const getColorAtReducedOpacity = (color, opacity = 0.5) => {
+  const opacityIdx = color.length - 2;
+  return `${color.slice(0, opacityIdx)}${opacity})`;
+};

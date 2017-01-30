@@ -69,7 +69,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	exports.getColorAtReducedOpacity = exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
 	
 	var _constants = __webpack_require__(8);
 	
@@ -132,6 +132,13 @@
 	  var y = event.clientY - canvas.offsetTop;
 	  return { x: x, y: y };
 	};
+	
+	var getColorAtReducedOpacity = exports.getColorAtReducedOpacity = function getColorAtReducedOpacity(color) {
+	  var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
+	
+	  var opacityIdx = color.length - 2;
+	  return '' + color.slice(0, opacityIdx) + opacity + ')';
+	};
 
 /***/ },
 /* 3 */,
@@ -168,7 +175,7 @@
 	    this.trackCursor();
 	
 	    this.board = new _Board2.default();
-	    this.score = 0;
+	    this.setupScoreBoard();
 	  }
 	
 	  _createClass(SpotsGame, [{
@@ -183,7 +190,7 @@
 	      this.moving = false;
 	      var points = this.board.endMove();
 	      if (points) {
-	        this.score += points;
+	        this.updateScore(points);
 	      }
 	    }
 	  }, {
@@ -192,6 +199,17 @@
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 	
 	      this.board.draw(this.ctx, this.cursorPos);
+	    }
+	  }, {
+	    key: 'setupScoreBoard',
+	    value: function setupScoreBoard() {
+	      this.gameTracker = {
+	        score: (0, _util.queryEl)('#score'),
+	        movesLeft: (0, _util.queryEl)('#moves-left')
+	      };
+	      this.score = 0;
+	      this.movesLeft = 31;
+	      this.updateScore();
 	    }
 	  }, {
 	    key: 'start',
@@ -227,6 +245,17 @@
 	      window.addEventListener('mouseup', function () {
 	        return _this3.endMove();
 	      });
+	    }
+	  }, {
+	    key: 'updateScore',
+	    value: function updateScore() {
+	      var points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	
+	      this.score += points;
+	      this.movesLeft -= 1;
+	      this.gameTracker.score.textContent = this.score;
+	      this.gameTracker.movesLeft.textContent = this.movesLeft;
+	      console.log(this.score);
 	    }
 	  }]);
 	
@@ -425,6 +454,8 @@
 	
 	var _constants = __webpack_require__(8);
 	
+	var _util = __webpack_require__(2);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Spot = function () {
@@ -463,6 +494,21 @@
 	      ctx.beginPath();
 	      ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.canvasPos.radius, 0, Math.PI * 2);
 	      ctx.fill();
+	
+	      if (this.pulsing) {
+	        this.drawPulse(ctx);
+	      }
+	    }
+	  }, {
+	    key: 'drawPulse',
+	    value: function drawPulse(ctx) {
+	      console.log('pulsing');
+	      console.log('pulseRadius', this.pulseRadius);
+	      console.log('this.canvasPos.radius', this.canvasPos.radius);
+	      ctx.fillStyle = (0, _util.getColorAtReducedOpacity)(this.color);
+	      ctx.beginPath();
+	      ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
+	      ctx.fill();
 	    }
 	  }, {
 	    key: 'isNeighboring',
@@ -483,10 +529,27 @@
 	      });
 	    }
 	  }, {
+	    key: 'pulse',
+	    value: function pulse() {
+	      var _this2 = this;
+	
+	      this.pulsing = true;
+	      this.pulseRadius = this.canvasPos.radius;
+	      var increasePulseRadius = function increasePulseRadius() {
+	        return _this2.pulseRadius += 0.3;
+	      };
+	      var pulseIncrease = setInterval(increasePulseRadius, 3);
+	      setTimeout(function () {
+	        clearInterval(pulseIncrease);
+	        _this2.pulsing = false;
+	      }, 300);
+	    }
+	  }, {
 	    key: 'setActive',
 	    value: function setActive() {
 	      this.isHead = true;
 	      this.radiusPct = 0.25;
+	      this.pulse();
 	    }
 	  }, {
 	    key: 'setCanvasPos',
@@ -527,11 +590,11 @@
 	  value: true
 	});
 	var COLORS = exports.COLORS = {
-	  PURPLE: '#9d5ab7',
-	  GREEN: '#89ed90',
-	  BLUE: '#8abdff',
-	  RED: '#f15c3b',
-	  YELLOW: '#e7dd00'
+	  PURPLE: 'rgba(157, 90, 184, 1)',
+	  GREEN: 'rgba(138, 237, 145, 1)',
+	  BLUE: 'rgba(138, 189, 255, 1)',
+	  RED: 'rgba(241, 92, 59, 1)',
+	  YELLOW: 'rgba(231, 221, 0, 1)'
 	};
 	
 	var COLORS_ARRAY = exports.COLORS_ARRAY = Object.values(COLORS);

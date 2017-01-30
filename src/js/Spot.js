@@ -33,10 +33,7 @@ export default class Spot {
     }
   }
   drawPulse(ctx) {
-    console.log('pulsing');
-    console.log('pulseRadius', this.pulseRadius);
-    console.log('this.canvasPos.radius', this.canvasPos.radius);
-    ctx.fillStyle = getColorAtReducedOpacity(this.color);
+    ctx.fillStyle = getColorAtReducedOpacity(this.color, this.pulseOpacity);
     ctx.beginPath();
     ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
     ctx.fill();
@@ -52,12 +49,18 @@ export default class Spot {
   pulse() {
     this.pulsing = true;
     this.pulseRadius = this.canvasPos.radius;
-    const increasePulseRadius = () => (this.pulseRadius += 0.3);
+    this.pulseOpacity = 0.5;
+
+    const increasePulseRadius = () => {
+      this.pulseRadius += 0.26;
+      this.pulseOpacity -= 0.004;
+    };
+
     const pulseIncrease = setInterval(increasePulseRadius, 3);
     setTimeout(() => {
       clearInterval(pulseIncrease);
       this.pulsing = false;
-    }, 300);
+    }, 350);
   }
   setActive() {
     this.isHead = true;

@@ -502,10 +502,7 @@
 	  }, {
 	    key: 'drawPulse',
 	    value: function drawPulse(ctx) {
-	      console.log('pulsing');
-	      console.log('pulseRadius', this.pulseRadius);
-	      console.log('this.canvasPos.radius', this.canvasPos.radius);
-	      ctx.fillStyle = (0, _util.getColorAtReducedOpacity)(this.color);
+	      ctx.fillStyle = (0, _util.getColorAtReducedOpacity)(this.color, this.pulseOpacity);
 	      ctx.beginPath();
 	      ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
 	      ctx.fill();
@@ -535,14 +532,18 @@
 	
 	      this.pulsing = true;
 	      this.pulseRadius = this.canvasPos.radius;
+	      this.pulseOpacity = 0.5;
+	
 	      var increasePulseRadius = function increasePulseRadius() {
-	        return _this2.pulseRadius += 0.3;
+	        _this2.pulseRadius += 0.26;
+	        _this2.pulseOpacity -= 0.004;
 	      };
+	
 	      var pulseIncrease = setInterval(increasePulseRadius, 3);
 	      setTimeout(function () {
 	        clearInterval(pulseIncrease);
 	        _this2.pulsing = false;
-	      }, 300);
+	      }, 350);
 	    }
 	  }, {
 	    key: 'setActive',

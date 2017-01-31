@@ -14,7 +14,7 @@ export default class Spot {
 
     return neighbor && sameColor;
   }
-  draw(ctx, sizeOfSpace, cursorPos) {
+  draw(ctx, sizeOfSpace, cursorPos, timeDelta) {
     this.setCanvasPos(sizeOfSpace);
 
     if (this.isHead && !this.isMouseOver(cursorPos)) {
@@ -29,7 +29,8 @@ export default class Spot {
     ctx.fill();
 
     if (this.pulsing) {
-      this.drawPulse(ctx);
+      this.increasePulse(timeDelta);
+      this.drawPulse(ctx, timeDelta);
     }
   }
   drawPulse(ctx) {
@@ -37,6 +38,13 @@ export default class Spot {
     ctx.beginPath();
     ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
     ctx.fill();
+  }
+  increasePulse(timeDelta) {
+    this.pulseRadius += (0.08 * timeDelta);
+    this.pulseOpacity -= (0.001 * timeDelta);
+    if (this.pulseOpacity < 0) {
+      this.pulsing = false;
+    }
   }
   isNeighboring(otherPos) {
     return Object.entries(DELTAS).find(([delta, { x, y }]) => {
@@ -50,17 +58,6 @@ export default class Spot {
     this.pulsing = true;
     this.pulseRadius = this.canvasPos.radius;
     this.pulseOpacity = 0.5;
-
-    const increasePulseRadius = () => {
-      this.pulseRadius += 0.26;
-      this.pulseOpacity -= 0.004;
-    };
-
-    const pulseIncrease = setInterval(increasePulseRadius, 3);
-    setTimeout(() => {
-      clearInterval(pulseIncrease);
-      this.pulsing = false;
-    }, 350);
   }
   setActive() {
     this.isHead = true;

@@ -12,8 +12,8 @@ export default class Board {
     spot.setActive();
     const line = new Line(spot);
     if (this.selectedSpots.length) {
-      this.getHeadSpot().setInactive();
-      this.getHeadLine().forgeConnection(spot);
+      this.getTailSpot().setInactive();
+      this.getTailLine().forgeConnection(spot);
     }
     this.selectedSpots.push(spot);
     this.lines.push(line);
@@ -33,9 +33,14 @@ export default class Board {
   }
   checkForNewConnections(cursorPos) {
     const activeSpot = this.findActiveSpot(cursorPos);
-    const head = this.getHeadSpot();
-    if (activeSpot && activeSpot !== head && head.canConnectWith(activeSpot)) {
-      this.addSpotToMove(activeSpot);
+    const tail = this.getTailSpot();
+    if (activeSpot && activeSpot !== tail && tail.canConnectWith(activeSpot)) {
+      const spotBeforeTail = this.getSpotBeforeTail();
+      if (spotBeforeTail && spotBeforeTail === activeSpot) {
+        this.removeLastConnection();
+      } else {
+        this.addSpotToMove(activeSpot);
+      }
     }
   }
   clearMove() {
@@ -71,14 +76,20 @@ export default class Board {
 
     return null;
   }
-  getHeadLine() {
+  getTailLine() {
     return this.lines[this.lines.length - 1];
   }
-  getHeadSpot() {
+  getTailSpot() {
     return this.selectedSpots[this.selectedSpots.length - 1];
   }
-  shiftEmptySpaces(emptySpaces) {
-
+  getSpotBeforeTail() {
+    if (this.selectedSpots.length < 2) return null;
+    return this.selectedSpots[this.selectedSpots.length - 2];
+  }
+  removeLastConnection() {
+    this.selectedSpots.pop();
+    this.lines.pop();
+    this.lines[this.lines.length - 1].endSpot = undefined;
   }
   setup() {
     this.grid = [];
@@ -101,10 +112,11 @@ export default class Board {
       const { x: column, y: row } = spot.pos;
       this.grid[row][column] = null;
       for (let y = row; y > 0; y--) {
+        // this swaps out the positions of the spots so that it shifts them "down" (higher index)
         this.grid[y][column] = this.grid[y - 1][column];
         this.grid[y - 1][column] = null;
         this.grid[y][column].pos.y = y;
-        // TODO: add a prevPos property;
+        // TODO: add a prevPos property for animation;
       }
       const replacementPos = { x: column, y: 0 };
       const replacementSpot = new Spot({ pos: replacementPos, color: randomColor() });

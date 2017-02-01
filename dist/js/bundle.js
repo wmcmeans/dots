@@ -223,8 +223,8 @@
 	      spot.setActive();
 	      var line = new _Line2.default(spot);
 	      if (this.selectedSpots.length) {
-	        this.getHeadSpot().setInactive();
-	        this.getHeadLine().forgeConnection(spot);
+	        this.getTailSpot().setInactive();
+	        this.getTailLine().forgeConnection(spot);
 	      }
 	      this.selectedSpots.push(spot);
 	      this.lines.push(line);
@@ -252,9 +252,14 @@
 	    key: 'checkForNewConnections',
 	    value: function checkForNewConnections(cursorPos) {
 	      var activeSpot = this.findActiveSpot(cursorPos);
-	      var head = this.getHeadSpot();
-	      if (activeSpot && activeSpot !== head && head.canConnectWith(activeSpot)) {
-	        this.addSpotToMove(activeSpot);
+	      var tail = this.getTailSpot();
+	      if (activeSpot && activeSpot !== tail && tail.canConnectWith(activeSpot)) {
+	        var spotBeforeTail = this.getSpotBeforeTail();
+	        if (spotBeforeTail && spotBeforeTail === activeSpot) {
+	          this.removeLastConnection();
+	        } else {
+	          this.addSpotToMove(activeSpot);
+	        }
 	      }
 	    }
 	  }, {
@@ -305,18 +310,28 @@
 	      return null;
 	    }
 	  }, {
-	    key: 'getHeadLine',
-	    value: function getHeadLine() {
+	    key: 'getTailLine',
+	    value: function getTailLine() {
 	      return this.lines[this.lines.length - 1];
 	    }
 	  }, {
-	    key: 'getHeadSpot',
-	    value: function getHeadSpot() {
+	    key: 'getTailSpot',
+	    value: function getTailSpot() {
 	      return this.selectedSpots[this.selectedSpots.length - 1];
 	    }
 	  }, {
-	    key: 'shiftEmptySpaces',
-	    value: function shiftEmptySpaces(emptySpaces) {}
+	    key: 'getSpotBeforeTail',
+	    value: function getSpotBeforeTail() {
+	      if (this.selectedSpots.length < 2) return null;
+	      return this.selectedSpots[this.selectedSpots.length - 2];
+	    }
+	  }, {
+	    key: 'removeLastConnection',
+	    value: function removeLastConnection() {
+	      this.selectedSpots.pop();
+	      this.lines.pop();
+	      this.lines[this.lines.length - 1].endSpot = undefined;
+	    }
 	  }, {
 	    key: 'setup',
 	    value: function setup() {
@@ -347,10 +362,11 @@
 	
 	        _this2.grid[row][column] = null;
 	        for (var y = row; y > 0; y--) {
+	          // this swaps out the positions of the spots so that it shifts them "down" (higher index)
 	          _this2.grid[y][column] = _this2.grid[y - 1][column];
 	          _this2.grid[y - 1][column] = null;
 	          _this2.grid[y][column].pos.y = y;
-	          // TODO: add a prevPos property;
+	          // TODO: add a prevPos property for animation;
 	        }
 	        var replacementPos = { x: column, y: 0 };
 	        var replacementSpot = new _Spot2.default({ pos: replacementPos, color: (0, _util.randomColor)() });

@@ -46,11 +46,11 @@
 
 	'use strict';
 	
-	var _Game = __webpack_require__(4);
+	var _Game = __webpack_require__(1);
 	
 	var _Game2 = _interopRequireDefault(_Game);
 	
-	var _util = __webpack_require__(2);
+	var _util = __webpack_require__(5);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -60,89 +60,7 @@
 	});
 
 /***/ },
-/* 1 */,
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getColorAtReducedOpacity = exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
-	
-	var _constants = __webpack_require__(8);
-	
-	var queryEl = exports.queryEl = function queryEl(selector) {
-	  return document.querySelector(selector);
-	};
-	var queryElAll = exports.queryElAll = function queryElAll(selector) {
-	  return document.querySelectorAll(selector);
-	};
-	
-	var randomColor = exports.randomColor = function randomColor() {
-	  var idx = Math.floor(Math.random() * 5);
-	  return _constants.COLORS_ARRAY[idx];
-	};
-	
-	var getOppositeDelta = exports.getOppositeDelta = function getOppositeDelta(delta) {
-	  switch (delta) {
-	    case 'top':
-	      return 'bottom';
-	    case 'right':
-	      return 'left';
-	    case 'bottom':
-	      return 'top';
-	    case 'left':
-	      return 'right';
-	    default:
-	      throw new Error('delta not found in list of deltas');
-	  }
-	};
-	
-	var fixCanvasBlur = exports.fixCanvasBlur = function fixCanvasBlur(canvas) {
-	  var context = canvas.getContext('2d');
-	  var devicePixelRatio = window.devicePixelRatio || 1;
-	  var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
-	
-	  var ratio = devicePixelRatio / backingStoreRatio;
-	
-	  if (devicePixelRatio !== backingStoreRatio) {
-	    var oldWidth = canvas.width;
-	    var oldHeight = canvas.height;
-	
-	    canvas.width = oldWidth * ratio;
-	    canvas.height = oldHeight * ratio;
-	
-	    canvas.style.width = oldWidth + 'px';
-	    canvas.style.height = oldHeight + 'px';
-	
-	    // now scale the context to counter
-	    // the fact that we've manually scaled
-	    // our canvas element
-	    context.scale(ratio, ratio);
-	  }
-	};
-	
-	var getCursorPos = exports.getCursorPos = function getCursorPos(canvas, event) {
-	  event.preventDefault();
-	  event.stopPropagation();
-	
-	  var x = event.clientX - canvas.offsetLeft;
-	  var y = event.clientY - canvas.offsetTop;
-	  return { x: x, y: y };
-	};
-	
-	var getColorAtReducedOpacity = exports.getColorAtReducedOpacity = function getColorAtReducedOpacity(color) {
-	  var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
-	
-	  var opacityIdx = color.length - 2;
-	  return '' + color.slice(0, opacityIdx) + opacity + ')';
-	};
-
-/***/ },
-/* 3 */,
-/* 4 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -153,11 +71,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _Board = __webpack_require__(5);
+	var _Board = __webpack_require__(2);
 	
 	var _Board2 = _interopRequireDefault(_Board);
 	
-	var _util = __webpack_require__(2);
+	var _util = __webpack_require__(5);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -265,7 +183,7 @@
 	exports.default = SpotsGame;
 
 /***/ },
-/* 5 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -276,15 +194,15 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _Spot = __webpack_require__(7);
+	var _Spot = __webpack_require__(3);
 	
 	var _Spot2 = _interopRequireDefault(_Spot);
 	
-	var _Line = __webpack_require__(9);
+	var _Line = __webpack_require__(6);
 	
 	var _Line2 = _interopRequireDefault(_Line);
 	
-	var _util = __webpack_require__(2);
+	var _util = __webpack_require__(5);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -397,6 +315,9 @@
 	      return this.selectedSpots[this.selectedSpots.length - 1];
 	    }
 	  }, {
+	    key: 'shiftEmptySpaces',
+	    value: function shiftEmptySpaces(emptySpaces) {}
+	  }, {
 	    key: 'setup',
 	    value: function setup() {
 	      this.grid = [];
@@ -419,13 +340,21 @@
 	      var _this2 = this;
 	
 	      var points = this.selectedSpots.length;
-	      // TODO: Instead of replacing spots in place, they should fall down in their columns
 	      this.selectedSpots.forEach(function (spot) {
-	        var pos = spot.pos;
+	        var _spot$pos = spot.pos,
+	            column = _spot$pos.x,
+	            row = _spot$pos.y;
 	
-	        var replacementSpot = new _Spot2.default({ pos: pos, color: (0, _util.randomColor)() });
-	        _this2.grid[pos.y][pos.x] = replacementSpot;
-	        // this.grid[pos.x].push(replacementSpot);
+	        _this2.grid[row][column] = null;
+	        for (var y = row; y > 0; y--) {
+	          _this2.grid[y][column] = _this2.grid[y - 1][column];
+	          _this2.grid[y - 1][column] = null;
+	          _this2.grid[y][column].pos.y = y;
+	          // TODO: add a prevPos property;
+	        }
+	        var replacementPos = { x: column, y: 0 };
+	        var replacementSpot = new _Spot2.default({ pos: replacementPos, color: (0, _util.randomColor)() });
+	        _this2.grid[0][column] = replacementSpot;
 	      });
 	      this.clearMove();
 	      return points;
@@ -438,8 +367,7 @@
 	exports.default = Board;
 
 /***/ },
-/* 6 */,
-/* 7 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -452,9 +380,9 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _constants = __webpack_require__(8);
+	var _constants = __webpack_require__(4);
 	
-	var _util = __webpack_require__(2);
+	var _util = __webpack_require__(5);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -581,7 +509,7 @@
 	exports.default = Spot;
 
 /***/ },
-/* 8 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -607,7 +535,87 @@
 	};
 
 /***/ },
-/* 9 */
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getColorAtReducedOpacity = exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	
+	var _constants = __webpack_require__(4);
+	
+	var queryEl = exports.queryEl = function queryEl(selector) {
+	  return document.querySelector(selector);
+	};
+	var queryElAll = exports.queryElAll = function queryElAll(selector) {
+	  return document.querySelectorAll(selector);
+	};
+	
+	var randomColor = exports.randomColor = function randomColor() {
+	  var idx = Math.floor(Math.random() * 5);
+	  return _constants.COLORS_ARRAY[idx];
+	};
+	
+	var getOppositeDelta = exports.getOppositeDelta = function getOppositeDelta(delta) {
+	  switch (delta) {
+	    case 'top':
+	      return 'bottom';
+	    case 'right':
+	      return 'left';
+	    case 'bottom':
+	      return 'top';
+	    case 'left':
+	      return 'right';
+	    default:
+	      throw new Error('delta not found in list of deltas');
+	  }
+	};
+	
+	var fixCanvasBlur = exports.fixCanvasBlur = function fixCanvasBlur(canvas) {
+	  var context = canvas.getContext('2d');
+	  var devicePixelRatio = window.devicePixelRatio || 1;
+	  var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+	
+	  var ratio = devicePixelRatio / backingStoreRatio;
+	
+	  if (devicePixelRatio !== backingStoreRatio) {
+	    var oldWidth = canvas.width;
+	    var oldHeight = canvas.height;
+	
+	    canvas.width = oldWidth * ratio;
+	    canvas.height = oldHeight * ratio;
+	
+	    canvas.style.width = oldWidth + 'px';
+	    canvas.style.height = oldHeight + 'px';
+	
+	    // now scale the context to counter
+	    // the fact that we've manually scaled
+	    // our canvas element
+	    context.scale(ratio, ratio);
+	  }
+	};
+	
+	var getCursorPos = exports.getCursorPos = function getCursorPos(canvas, event) {
+	  event.preventDefault();
+	  event.stopPropagation();
+	
+	  var x = event.clientX - canvas.offsetLeft;
+	  var y = event.clientY - canvas.offsetTop;
+	  return { x: x, y: y };
+	};
+	
+	var getColorAtReducedOpacity = exports.getColorAtReducedOpacity = function getColorAtReducedOpacity(color) {
+	  var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
+	
+	  var opacityIdx = color.length - 2;
+	  return '' + color.slice(0, opacityIdx) + opacity + ')';
+	};
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';

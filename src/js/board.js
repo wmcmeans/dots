@@ -77,6 +77,9 @@ export default class Board {
   getHeadSpot() {
     return this.selectedSpots[this.selectedSpots.length - 1];
   }
+  shiftEmptySpaces(emptySpaces) {
+
+  }
   setup() {
     this.grid = [];
 
@@ -94,12 +97,18 @@ export default class Board {
   }
   tallyAndRemoveSpots() {
     const points = this.selectedSpots.length;
-    // TODO: Instead of replacing spots in place, they should fall down in their columns
     this.selectedSpots.forEach(spot => {
-      const { pos } = spot;
-      const replacementSpot = new Spot({ pos, color: randomColor() });
-      this.grid[pos.y][pos.x] = replacementSpot;
-      // this.grid[pos.x].push(replacementSpot);
+      const { x: column, y: row } = spot.pos;
+      this.grid[row][column] = null;
+      for (let y = row; y > 0; y--) {
+        this.grid[y][column] = this.grid[y - 1][column];
+        this.grid[y - 1][column] = null;
+        this.grid[y][column].pos.y = y;
+        // TODO: add a prevPos property;
+      }
+      const replacementPos = { x: column, y: 0 };
+      const replacementSpot = new Spot({ pos: replacementPos, color: randomColor() });
+      this.grid[0][column] = replacementSpot;
     });
     this.clearMove();
     return points;

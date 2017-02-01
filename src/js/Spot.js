@@ -90,7 +90,6 @@ export default class Spot {
     this.radiusPct = 0.22;
   }
   animateFromPreviousHeight(y) {
-    console.log(this.downwardAnimation)
     if (typeof this.downwardAnimation === 'undefined') {
       this.previousY = y;
       this.downwardAnimation = 0.0001;

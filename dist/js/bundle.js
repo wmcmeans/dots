@@ -368,7 +368,7 @@
 	          _this2.grid[y][column] = _this2.grid[y - 1][column];
 	          _this2.grid[y - 1][column] = null;
 	          _this2.grid[y][column].pos.y = y;
-	          // TODO: add a prevPos property for animation;
+	
 	          if (_this2.grid[y][column]) {
 	            _this2.grid[y][column].animateFromPreviousHeight(y - 1);
 	          }
@@ -376,6 +376,7 @@
 	        var replacementPos = { x: column, y: 0 };
 	        var replacementSpot = new _Spot2.default({ pos: replacementPos, color: (0, _util.randomColor)() });
 	        _this2.grid[0][column] = replacementSpot;
+	        replacementSpot.animateFromPreviousHeight(-1);
 	      });
 	      this.clearMove();
 	      return points;
@@ -532,7 +533,6 @@
 	  }, {
 	    key: 'animateFromPreviousHeight',
 	    value: function animateFromPreviousHeight(y) {
-	      console.log(this.downwardAnimation);
 	      if (typeof this.downwardAnimation === 'undefined') {
 	        this.previousY = y;
 	        this.downwardAnimation = 0.0001;

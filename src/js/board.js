@@ -47,7 +47,7 @@ export default class Board {
     this.selectedSpots = [];
     this.lines = [];
   }
-  draw(ctx, cursorPos) {
+  draw(ctx, cursorPos, timeDelta) {
     this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
 
     if (this.moving) {
@@ -55,7 +55,7 @@ export default class Board {
     }
 
     this.grid.forEach(row => (
-      row.forEach(spot => spot.draw(ctx, this.squareSize, cursorPos))
+      row.forEach(spot => spot.draw(ctx, this.squareSize, cursorPos, timeDelta))
     ));
     this.lines.forEach(line => line.draw(ctx, cursorPos));
   }

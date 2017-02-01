@@ -24,10 +24,10 @@ export default class SpotsGame {
       this.updateScore(points);
     }
   }
-  render() {
+  render(timeDelta) {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 
-    this.board.draw(this.ctx, this.cursorPos);
+    this.board.draw(this.ctx, this.cursorPos, timeDelta);
   }
   setupScoreBoard() {
     this.gameTracker = {
@@ -39,11 +39,14 @@ export default class SpotsGame {
     this.updateScore();
   }
   start() {
-    const animate = () => {
-      this.render();
+    const animate = (time) => {
+      const timeDelta = time - this.lastTime;
+      this.lastTime = time;
+
+      this.render(timeDelta);
       requestAnimationFrame(animate);
     };
-    animate();
+    animate(0);
     this.trackMoves();
   }
   trackCursor() {
@@ -62,6 +65,5 @@ export default class SpotsGame {
     this.movesLeft -= 1;
     this.gameTracker.score.textContent = this.score;
     this.gameTracker.movesLeft.textContent = this.movesLeft;
-    console.log(this.score);
   }
 }

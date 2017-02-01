@@ -113,10 +113,10 @@
 	    }
 	  }, {
 	    key: 'render',
-	    value: function render() {
+	    value: function render(timeDelta) {
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 	
-	      this.board.draw(this.ctx, this.cursorPos);
+	      this.board.draw(this.ctx, this.cursorPos, timeDelta);
 	    }
 	  }, {
 	    key: 'setupScoreBoard',
@@ -134,11 +134,14 @@
 	    value: function start() {
 	      var _this = this;
 	
-	      var animate = function animate() {
-	        _this.render();
+	      var animate = function animate(time) {
+	        var timeDelta = time - _this.lastTime;
+	        _this.lastTime = time;
+	
+	        _this.render(timeDelta);
 	        requestAnimationFrame(animate);
 	      };
-	      animate();
+	      animate(0);
 	      this.trackMoves();
 	    }
 	  }, {
@@ -173,7 +176,6 @@
 	      this.movesLeft -= 1;
 	      this.gameTracker.score.textContent = this.score;
 	      this.gameTracker.movesLeft.textContent = this.movesLeft;
-	      console.log(this.score);
 	    }
 	  }]);
 	
@@ -270,7 +272,7 @@
 	    }
 	  }, {
 	    key: 'draw',
-	    value: function draw(ctx, cursorPos) {
+	    value: function draw(ctx, cursorPos, timeDelta) {
 	      var _this = this;
 	
 	      this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
@@ -281,7 +283,7 @@
 	
 	      this.grid.forEach(function (row) {
 	        return row.forEach(function (spot) {
-	          return spot.draw(ctx, _this.squareSize, cursorPos);
+	          return spot.draw(ctx, _this.squareSize, cursorPos, timeDelta);
 	        });
 	      });
 	      this.lines.forEach(function (line) {
@@ -435,7 +437,7 @@
 	    }
 	  }, {
 	    key: 'draw',
-	    value: function draw(ctx, sizeOfSpace, cursorPos) {
+	    value: function draw(ctx, sizeOfSpace, cursorPos, timeDelta) {
 	      if (this.previousPos) {}
 	      this.setCanvasPos(sizeOfSpace);
 	
@@ -451,16 +453,26 @@
 	      ctx.fill();
 	
 	      if (this.pulsing) {
-	        this.drawPulse(ctx);
+	        this.increasePulse(timeDelta);
+	        this.drawPulse(ctx, timeDelta);
 	      }
 	    }
 	  }, {
 	    key: 'drawPulse',
 	    value: function drawPulse(ctx) {
-	      ctx.fillStyle = (0, _util.getColorAtReducedOpacity)(this.color);
+	      ctx.fillStyle = (0, _util.getColorAtReducedOpacity)(this.color, this.pulseOpacity);
 	      ctx.beginPath();
 	      ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
 	      ctx.fill();
+	    }
+	  }, {
+	    key: 'increasePulse',
+	    value: function increasePulse(timeDelta) {
+	      this.pulseRadius += 0.08 * timeDelta;
+	      this.pulseOpacity -= 0.001 * timeDelta;
+	      if (this.pulseOpacity < 0) {
+	        this.pulsing = false;
+	      }
 	    }
 	  }, {
 	    key: 'isNeighboring',
@@ -483,18 +495,9 @@
 	  }, {
 	    key: 'pulse',
 	    value: function pulse() {
-	      var _this2 = this;
-	
 	      this.pulsing = true;
 	      this.pulseRadius = this.canvasPos.radius;
-	      var increasePulseRadius = function increasePulseRadius() {
-	        return _this2.pulseRadius += 0.3;
-	      };
-	      var pulseIncrease = setInterval(increasePulseRadius, 3);
-	      setTimeout(function () {
-	        clearInterval(pulseIncrease);
-	        _this2.pulsing = false;
-	      }, 300);
+	      this.pulseOpacity = 0.5;
 	    }
 	  }, {
 	    key: 'setActive',

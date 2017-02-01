@@ -6,14 +6,20 @@ export default class Spot {
     this.pos = pos;
     this.color = color;
     this.setInactive();
-    // this.radiusPct = 0.22;
   }
-  setCanvasPosForAnimationDown(sizeOfSpace) {
-    this.canvasPos = {
-      cx: this.previousPos.x * sizeOfSpace + (sizeOfSpace / 2),
-      cy: this.previousPos.y * sizeOfSpace + (sizeOfSpace / 2),
-      radius: sizeOfSpace * this.radiusPct,
-    };
+  setCanvasPosForAnimationDown(sizeOfSpace, timeDelta) {
+    this.downwardAnimation += (timeDelta * 0.004);
+
+    const previousCanvasCY = this.previousY * sizeOfSpace + (sizeOfSpace / 2);
+    const currentCanvasCY = this.pos.y * sizeOfSpace + (sizeOfSpace / 2);
+    const differenceInCanvasCY = currentCanvasCY - previousCanvasCY;
+
+    if (this.downwardAnimation < 1) {
+      this.canvasPos.cy = previousCanvasCY + (differenceInCanvasCY * this.downwardAnimation);
+    } else {
+      this.downwardAnimation = undefined;
+      this.previousY = undefined;
+    }
   }
   canConnectWith(otherSpot) {
     const neighbor = this.isNeighboring(otherSpot.pos);
@@ -21,15 +27,13 @@ export default class Spot {
 
     return neighbor && sameColor;
   }
-draw(ctx, sizeOfSpace, cursorPos, timeDelta) {
-    if (this.previousPos) {
-
-    }
+  draw(ctx, sizeOfSpace, cursorPos, timeDelta) {
     this.setCanvasPos(sizeOfSpace);
+    if (typeof this.downwardAnimation !== 'undefined') {
+      this.setCanvasPosForAnimationDown(sizeOfSpace, timeDelta);
+    }
 
     if (this.isHead && !this.isMouseOver(cursorPos)) {
-      // console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
-      // console.log(`mouse exited [${this.pos.x}, ${this.pos.y}] (${this.color})`);
       this.setInactive();
     }
 
@@ -85,9 +89,11 @@ draw(ctx, sizeOfSpace, cursorPos, timeDelta) {
     this.isHead = false;
     this.radiusPct = 0.22;
   }
-  shiftFromPreviousPos(pos) {
-    if (!this.previousPos) {
-      this.previousPos = pos;
+  animateFromPreviousHeight(y) {
+    console.log(this.downwardAnimation)
+    if (typeof this.downwardAnimation === 'undefined') {
+      this.previousY = y;
+      this.downwardAnimation = 0.0001;
     }
   }
   isMouseOver(cursorPos) {

@@ -117,7 +117,9 @@ export default class Board {
         this.grid[y - 1][column] = null;
         this.grid[y][column].pos.y = y;
         // TODO: add a prevPos property for animation;
-        this.grid[y][column].shiftFromPreviousPos({ x: column, y: y - 1 });
+        if (this.grid[y][column]) {
+          this.grid[y][column].animateFromPreviousHeight(y - 1);
+        }
       }
       const replacementPos = { x: column, y: 0 };
       const replacementSpot = new Spot({ pos: replacementPos, color: randomColor() });

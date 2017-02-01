@@ -369,7 +369,9 @@
 	          _this2.grid[y - 1][column] = null;
 	          _this2.grid[y][column].pos.y = y;
 	          // TODO: add a prevPos property for animation;
-	          _this2.grid[y][column].shiftFromPreviousPos({ x: column, y: y - 1 });
+	          if (_this2.grid[y][column]) {
+	            _this2.grid[y][column].animateFromPreviousHeight(y - 1);
+	          }
 	        }
 	        var replacementPos = { x: column, y: 0 };
 	        var replacementSpot = new _Spot2.default({ pos: replacementPos, color: (0, _util.randomColor)() });
@@ -415,17 +417,23 @@
 	    this.pos = pos;
 	    this.color = color;
 	    this.setInactive();
-	    // this.radiusPct = 0.22;
 	  }
 	
 	  _createClass(Spot, [{
 	    key: 'setCanvasPosForAnimationDown',
-	    value: function setCanvasPosForAnimationDown(sizeOfSpace) {
-	      this.canvasPos = {
-	        cx: this.previousPos.x * sizeOfSpace + sizeOfSpace / 2,
-	        cy: this.previousPos.y * sizeOfSpace + sizeOfSpace / 2,
-	        radius: sizeOfSpace * this.radiusPct
-	      };
+	    value: function setCanvasPosForAnimationDown(sizeOfSpace, timeDelta) {
+	      this.downwardAnimation += timeDelta * 0.004;
+	
+	      var previousCanvasCY = this.previousY * sizeOfSpace + sizeOfSpace / 2;
+	      var currentCanvasCY = this.pos.y * sizeOfSpace + sizeOfSpace / 2;
+	      var differenceInCanvasCY = currentCanvasCY - previousCanvasCY;
+	
+	      if (this.downwardAnimation < 1) {
+	        this.canvasPos.cy = previousCanvasCY + differenceInCanvasCY * this.downwardAnimation;
+	      } else {
+	        this.downwardAnimation = undefined;
+	        this.previousY = undefined;
+	      }
 	    }
 	  }, {
 	    key: 'canConnectWith',
@@ -438,12 +446,12 @@
 	  }, {
 	    key: 'draw',
 	    value: function draw(ctx, sizeOfSpace, cursorPos, timeDelta) {
-	      if (this.previousPos) {}
 	      this.setCanvasPos(sizeOfSpace);
+	      if (typeof this.downwardAnimation !== 'undefined') {
+	        this.setCanvasPosForAnimationDown(sizeOfSpace, timeDelta);
+	      }
 	
 	      if (this.isHead && !this.isMouseOver(cursorPos)) {
-	        // console.log(`mouse over [${this.pos.x}, ${this.pos.y}] (${this.color})`);
-	        // console.log(`mouse exited [${this.pos.x}, ${this.pos.y}] (${this.color})`);
 	        this.setInactive();
 	      }
 	
@@ -522,10 +530,12 @@
 	      this.radiusPct = 0.22;
 	    }
 	  }, {
-	    key: 'shiftFromPreviousPos',
-	    value: function shiftFromPreviousPos(pos) {
-	      if (!this.previousPos) {
-	        this.previousPos = pos;
+	    key: 'animateFromPreviousHeight',
+	    value: function animateFromPreviousHeight(y) {
+	      console.log(this.downwardAnimation);
+	      if (typeof this.downwardAnimation === 'undefined') {
+	        this.previousY = y;
+	        this.downwardAnimation = 0.0001;
 	      }
 	    }
 	  }, {

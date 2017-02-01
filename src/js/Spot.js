@@ -93,6 +93,9 @@ export default class Spot {
     if (typeof this.downwardAnimation === 'undefined') {
       this.previousY = y;
       this.downwardAnimation = 0.0001;
+      // handles the case in which multiple new spots are added
+    } else if (this.previousY < 0) {
+      this.previousY -= 1;
     }
   }
   isMouseOver(cursorPos) {

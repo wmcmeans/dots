@@ -330,7 +330,7 @@
 	    value: function removeLastConnection() {
 	      this.selectedSpots.pop();
 	      this.lines.pop();
-	      this.lines[this.lines.length - 1].endSpot = undefined;
+	      this.lines[this.lines.length - 1].endSpot.destroyConnection();
 	    }
 	  }, {
 	    key: 'setup',
@@ -367,6 +367,7 @@
 	          _this2.grid[y - 1][column] = null;
 	          _this2.grid[y][column].pos.y = y;
 	          // TODO: add a prevPos property for animation;
+	          _this2.grid[y][column].shiftFromPreviousPos({ x: column, y: y - 1 });
 	        }
 	        var replacementPos = { x: column, y: 0 };
 	        var replacementSpot = new _Spot2.default({ pos: replacementPos, color: (0, _util.randomColor)() });
@@ -416,6 +417,15 @@
 	  }
 	
 	  _createClass(Spot, [{
+	    key: 'setCanvasPosForAnimationDown',
+	    value: function setCanvasPosForAnimationDown(sizeOfSpace) {
+	      this.canvasPos = {
+	        cx: this.previousPos.x * sizeOfSpace + sizeOfSpace / 2,
+	        cy: this.previousPos.y * sizeOfSpace + sizeOfSpace / 2,
+	        radius: sizeOfSpace * this.radiusPct
+	      };
+	    }
+	  }, {
 	    key: 'canConnectWith',
 	    value: function canConnectWith(otherSpot) {
 	      var neighbor = this.isNeighboring(otherSpot.pos);
@@ -426,6 +436,7 @@
 	  }, {
 	    key: 'draw',
 	    value: function draw(ctx, sizeOfSpace, cursorPos) {
+	      if (this.previousPos) {}
 	      this.setCanvasPos(sizeOfSpace);
 	
 	      if (this.isHead && !this.isMouseOver(cursorPos)) {
@@ -446,9 +457,6 @@
 	  }, {
 	    key: 'drawPulse',
 	    value: function drawPulse(ctx) {
-	      console.log('pulsing');
-	      console.log('pulseRadius', this.pulseRadius);
-	      console.log('this.canvasPos.radius', this.canvasPos.radius);
 	      ctx.fillStyle = (0, _util.getColorAtReducedOpacity)(this.color);
 	      ctx.beginPath();
 	      ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
@@ -509,6 +517,13 @@
 	    value: function setInactive() {
 	      this.isHead = false;
 	      this.radiusPct = 0.22;
+	    }
+	  }, {
+	    key: 'shiftFromPreviousPos',
+	    value: function shiftFromPreviousPos(pos) {
+	      if (!this.previousPos) {
+	        this.previousPos = pos;
+	      }
 	    }
 	  }, {
 	    key: 'isMouseOver',
@@ -634,7 +649,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -652,12 +667,12 @@
 	  }
 	
 	  _createClass(Line, [{
-	    key: 'destroy',
-	    value: function destroy() {
-	      console.log('destroy mee!!!!');
+	    key: "destroyConnection",
+	    value: function destroyConnection() {
+	      this.endSpot = undefined;
 	    }
 	  }, {
-	    key: 'draw',
+	    key: "draw",
 	    value: function draw(ctx, cursorPos) {
 	      ctx.strokeStyle = this.startSpot.color;
 	      ctx.lineWidth = 12;
@@ -671,7 +686,7 @@
 	      ctx.stroke();
 	    }
 	  }, {
-	    key: 'forgeConnection',
+	    key: "forgeConnection",
 	    value: function forgeConnection(endSpot) {
 	      this.endSpot = endSpot;
 	    }

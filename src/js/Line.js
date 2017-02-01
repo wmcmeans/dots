@@ -2,8 +2,8 @@ export default class Line {
   constructor(startSpot) {
     this.startSpot = startSpot;
   }
-  destroy() {
-    console.log('destroy mee!!!!');
+  destroyConnection() {
+    this.endSpot = undefined;
   }
   draw(ctx, cursorPos) {
     ctx.strokeStyle = this.startSpot.color;

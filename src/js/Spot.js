@@ -8,6 +8,13 @@ export default class Spot {
     this.setInactive();
     // this.radiusPct = 0.22;
   }
+  setCanvasPosForAnimationDown(sizeOfSpace) {
+    this.canvasPos = {
+      cx: this.previousPos.x * sizeOfSpace + (sizeOfSpace / 2),
+      cy: this.previousPos.y * sizeOfSpace + (sizeOfSpace / 2),
+      radius: sizeOfSpace * this.radiusPct,
+    };
+  }
   canConnectWith(otherSpot) {
     const neighbor = this.isNeighboring(otherSpot.pos);
     const sameColor = this.color === otherSpot.color;
@@ -15,6 +22,9 @@ export default class Spot {
     return neighbor && sameColor;
   }
   draw(ctx, sizeOfSpace, cursorPos) {
+    if (this.previousPos) {
+      
+    }
     this.setCanvasPos(sizeOfSpace);
 
     if (this.isHead && !this.isMouseOver(cursorPos)) {
@@ -33,9 +43,6 @@ export default class Spot {
     }
   }
   drawPulse(ctx) {
-    console.log('pulsing');
-    console.log('pulseRadius', this.pulseRadius);
-    console.log('this.canvasPos.radius', this.canvasPos.radius);
     ctx.fillStyle = getColorAtReducedOpacity(this.color);
     ctx.beginPath();
     ctx.arc(this.canvasPos.cx, this.canvasPos.cy, this.pulseRadius, 0, Math.PI * 2);
@@ -74,6 +81,11 @@ export default class Spot {
   setInactive() {
     this.isHead = false;
     this.radiusPct = 0.22;
+  }
+  shiftFromPreviousPos(pos) {
+    if (!this.previousPos) {
+      this.previousPos = pos;
+    }
   }
   isMouseOver(cursorPos) {
     const dx = cursorPos.x - this.canvasPos.cx;

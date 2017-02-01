@@ -89,7 +89,7 @@ export default class Board {
   removeLastConnection() {
     this.selectedSpots.pop();
     this.lines.pop();
-    this.lines[this.lines.length - 1].endSpot = undefined;
+    this.lines[this.lines.length - 1].endSpot.destroyConnection();
   }
   setup() {
     this.grid = [];
@@ -117,6 +117,7 @@ export default class Board {
         this.grid[y - 1][column] = null;
         this.grid[y][column].pos.y = y;
         // TODO: add a prevPos property for animation;
+        this.grid[y][column].shiftFromPreviousPos({ x: column, y: y - 1 });
       }
       const replacementPos = { x: column, y: 0 };
       const replacementSpot = new Spot({ pos: replacementPos, color: randomColor() });

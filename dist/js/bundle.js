@@ -332,7 +332,10 @@
 	    value: function removeLastConnection() {
 	      this.selectedSpots.pop();
 	      this.lines.pop();
-	      this.lines[this.lines.length - 1].endSpot.destroyConnection();
+	      var lastLine = this.lines[this.lines.length - 1];
+	      if (lastLine.endSpot) {
+	        lastLine.destroyConnection();
+	      }
 	    }
 	  }, {
 	    key: 'setup',

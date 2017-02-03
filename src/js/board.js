@@ -89,7 +89,10 @@ export default class Board {
   removeLastConnection() {
     this.selectedSpots.pop();
     this.lines.pop();
-    this.lines[this.lines.length - 1].endSpot.destroyConnection();
+    const lastLine = this.lines[this.lines.length - 1];
+    if (lastLine.endSpot) {
+      lastLine.destroyConnection();
+    }
   }
   setup() {
     this.grid = [];

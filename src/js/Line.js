@@ -7,7 +7,7 @@ export default class Line {
   }
   draw(ctx, cursorPos) {
     ctx.strokeStyle = this.startSpot.color;
-    ctx.lineWidth = 12;
+    ctx.lineWidth = 12 * (ctx.canvas.width / 1200);
     ctx.beginPath();
     ctx.moveTo(this.startSpot.canvasPos.cx, this.startSpot.canvasPos.cy);
     if (this.endSpot) {

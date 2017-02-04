@@ -265,10 +265,29 @@
 	        var spotBeforeTail = this.getSpotBeforeTail();
 	        if (spotBeforeTail && spotBeforeTail === activeSpot) {
 	          this.removeLastConnection();
+	          this.checkForLoops();
 	        } else if (!connectionAreadyExists) {
 	          this.addSpotToMove(activeSpot);
+	          this.checkForLoops();
 	        }
 	      }
+	    }
+	  }, {
+	    key: 'checkForLoops',
+	    value: function checkForLoops() {
+	      var seenSpots = new Set();
+	      var squared = false;
+	      this.lines.forEach(function (_ref2) {
+	        var startSpot = _ref2.startSpot;
+	
+	        var posAsString = startSpot.pos.x + '-' + startSpot.pos.y;
+	        if (seenSpots.has(posAsString)) {
+	          squared = true;
+	        }
+	        seenSpots.add(posAsString);
+	      });
+	
+	      this.squared = squared;
 	    }
 	  }, {
 	    key: 'clearMove',

@@ -19,10 +19,6 @@ export default class SpotsGame {
     this.board = new Board();
     this.setupScoreBoard();
   }
-  beginMove() {
-    this.moving = true;
-    this.board.beginMove(this.cursorPos);
-  }
   addBorderAndBG() {
     if (this.board.squared) {
       document.body.style.backgroundColor = getColorAtReducedOpacity(this.board.moveColor, 0.25);
@@ -32,11 +28,24 @@ export default class SpotsGame {
       document.body.style.borderColor = 'transparent';
     }
   }
+  beginMove() {
+    this.moving = true;
+    this.board.beginMove(this.cursorPos);
+  }
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.xDim, this.yDim);
+  }
+  end() {
+    this.over = true;
+  }
   endMove() {
     this.moving = false;
     const points = this.board.endMove();
     if (points) {
       this.updateScore(points);
+    }
+    if (this.movesLeft === 0) {
+      this.end();
     }
   }
   render(timeDelta) {
@@ -51,7 +60,8 @@ export default class SpotsGame {
       movesLeft: queryEl('#moves-left'),
     };
     this.score = 0;
-    this.movesLeft = 31;
+    this.movesLeft = 3;
+    // this.movesLeft = 31;
     this.updateScore();
   }
   start() {
@@ -60,7 +70,11 @@ export default class SpotsGame {
       this.lastTime = time;
 
       this.render(timeDelta);
-      requestAnimationFrame(animate);
+      if (!this.over) {
+        window.requestAnimationFrame(animate);
+      } else {
+        this.clearCanvas();
+      }
     };
     animate(0);
     this.trackMoves();
@@ -82,6 +96,7 @@ export default class SpotsGame {
       this.cursorPos = getTouchPos(this.ctx.canvas, e);
       this.beginMove();
     });
+
     window.addEventListener('mouseup', () => this.endMove());
     window.addEventListener('touchend', () => this.endMove());
   }

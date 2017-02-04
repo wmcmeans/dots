@@ -1,4 +1,4 @@
-import { COLORS_ARRAY, DELTAS } from './constants';
+import { COLORS_ARRAY } from './constants';
 
 export const queryEl = selector => (document.querySelector(selector));
 export const queryElAll = selector => (document.querySelectorAll(selector));
@@ -69,8 +69,6 @@ export const getTouchPos = (canvas, event) => {
   const x = touch.clientX - canvas.offsetLeft;
   const y = touch.clientY - canvas.offsetTop;
 
-  console.log('x: ', x);
-  console.log('y: ', y);
   return { x, y };
 };
 

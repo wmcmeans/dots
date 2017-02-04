@@ -57,6 +57,20 @@ export const getCursorPos = (canvas, event) => {
 
   const x = event.clientX - canvas.offsetLeft;
   const y = event.clientY - canvas.offsetTop;
+
+  return { x, y };
+};
+
+export const getTouchPos = (canvas, event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const touch = event.touches[0] || event.changedTouches[0];
+  const x = touch.clientX - canvas.offsetLeft;
+  const y = touch.clientY - canvas.offsetTop;
+
+  console.log('x: ', x);
+  console.log('y: ', y);
   return { x, y };
 };
 

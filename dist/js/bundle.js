@@ -166,6 +166,10 @@
 	      document.addEventListener('mousemove', function (e) {
 	        return _this2.cursorPos = (0, _util.getCursorPos)(_this2.ctx.canvas, e);
 	      });
+	
+	      document.addEventListener('touchmove', function (e) {
+	        return _this2.cursorPos = (0, _util.getTouchPos)(_this2.ctx.canvas, e);
+	      });
 	    }
 	  }, {
 	    key: 'trackMoves',
@@ -175,7 +179,14 @@
 	      this.ctx.canvas.addEventListener('mousedown', function () {
 	        return _this3.beginMove();
 	      });
+	      this.ctx.canvas.addEventListener('touchstart', function (e) {
+	        _this3.cursorPos = (0, _util.getTouchPos)(_this3.ctx.canvas, e);
+	        _this3.beginMove();
+	      });
 	      window.addEventListener('mouseup', function () {
+	        return _this3.endMove();
+	      });
+	      window.addEventListener('touchend', function () {
 	        return _this3.endMove();
 	      });
 	    }
@@ -667,7 +678,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.getColorAtReducedOpacity = exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
+	exports.getColorAtReducedOpacity = exports.getTouchPos = exports.getCursorPos = exports.fixCanvasBlur = exports.getOppositeDelta = exports.randomColor = exports.queryElAll = exports.queryEl = undefined;
 	
 	var _constants = __webpack_require__(4);
 	
@@ -728,6 +739,20 @@
 	
 	  var x = event.clientX - canvas.offsetLeft;
 	  var y = event.clientY - canvas.offsetTop;
+	
+	  return { x: x, y: y };
+	};
+	
+	var getTouchPos = exports.getTouchPos = function getTouchPos(canvas, event) {
+	  event.preventDefault();
+	  event.stopPropagation();
+	
+	  var touch = event.touches[0] || event.changedTouches[0];
+	  var x = touch.clientX - canvas.offsetLeft;
+	  var y = touch.clientY - canvas.offsetTop;
+	
+	  console.log('x: ', x);
+	  console.log('y: ', y);
 	  return { x: x, y: y };
 	};
 	

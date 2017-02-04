@@ -1,5 +1,11 @@
 import Board from './Board';
-import { fixCanvasBlur, getCursorPos, getColorAtReducedOpacity, queryEl } from './util';
+import {
+  fixCanvasBlur,
+  getCursorPos,
+  getTouchPos,
+  getColorAtReducedOpacity,
+  queryEl,
+} from './util';
 
 export default class SpotsGame {
   constructor(canvas) {
@@ -25,7 +31,6 @@ export default class SpotsGame {
       document.body.style.backgroundColor = '';
       document.body.style.borderColor = 'transparent';
     }
-
   }
   endMove() {
     this.moving = false;
@@ -66,10 +71,19 @@ export default class SpotsGame {
     document.addEventListener('mousemove', (e) => (
       this.cursorPos = getCursorPos(this.ctx.canvas, e)
     ));
+
+    document.addEventListener('touchmove', (e) => (
+      this.cursorPos = getTouchPos(this.ctx.canvas, e)
+    ));
   }
   trackMoves() {
     this.ctx.canvas.addEventListener('mousedown', () => this.beginMove());
+    this.ctx.canvas.addEventListener('touchstart', (e) => {
+      this.cursorPos = getTouchPos(this.ctx.canvas, e);
+      this.beginMove();
+    });
     window.addEventListener('mouseup', () => this.endMove());
+    window.addEventListener('touchend', () => this.endMove());
   }
   updateScore(points = 0) {
     this.score += points;

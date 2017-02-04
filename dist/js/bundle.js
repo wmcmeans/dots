@@ -115,6 +115,11 @@
 	    key: 'render',
 	    value: function render(timeDelta) {
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
+	      if (this.board.squared) {
+	        document.body.style.backgroundColor = (0, _util.getColorAtReducedOpacity)(this.board.moveColor, 0.25);
+	      } else {
+	        document.body.style.backgroundColor = '';
+	      }
 	
 	      this.board.draw(this.ctx, this.cursorPos, timeDelta);
 	    }
@@ -216,6 +221,7 @@
 	
 	    this.selectedSpots = [];
 	    this.lines = [];
+	    this.moveColor = undefined;
 	    this.setup();
 	  }
 	
@@ -305,10 +311,10 @@
 	        seenSpots.add(posAsString);
 	      });
 	
-	      var moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
+	      this.moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
 	      this.grid.forEach(function (row) {
 	        row.forEach(function (spot) {
-	          if (spot.color === moveColor && squared) {
+	          if (spot.color === _this2.moveColor && squared) {
 	            spot.setActive();
 	          } else if (!_this2.selectedSpots.find(function (selected) {
 	            return selected === spot;
@@ -418,6 +424,8 @@
 	      if (this.squared) {
 	        this.addAllSpotsOfColorToMove();
 	      }
+	      this.squared = false;
+	
 	      var points = this.selectedSpots.length;
 	      this.selectedSpots.forEach(function (spot) {
 	        var _spot$pos = spot.pos,

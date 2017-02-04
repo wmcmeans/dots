@@ -6,6 +6,7 @@ export default class Board {
   constructor() {
     this.selectedSpots = [];
     this.lines = [];
+    this.moveColor = undefined;
     this.setup();
   }
   addAllSpotsOfColorToMove() {
@@ -71,10 +72,10 @@ export default class Board {
       seenSpots.add(posAsString);
     });
 
-    const moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
+    this.moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
     this.grid.forEach(row => {
       row.forEach(spot => {
-        if (spot.color === moveColor && squared) {
+        if (spot.color === this.moveColor && squared) {
           spot.setActive();
         } else if (!this.selectedSpots.find(selected => selected === spot)) {
           spot.setInactive();
@@ -154,6 +155,8 @@ export default class Board {
     if (this.squared) {
       this.addAllSpotsOfColorToMove();
     }
+    this.squared = false;
+
     const points = this.selectedSpots.length;
     this.selectedSpots.forEach(spot => {
       const { x: column, y: row } = spot.pos;

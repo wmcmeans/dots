@@ -1,5 +1,5 @@
 import Board from './Board';
-import { fixCanvasBlur, getCursorPos, queryEl } from './util';
+import { fixCanvasBlur, getCursorPos, getColorAtReducedOpacity, queryEl } from './util';
 
 export default class SpotsGame {
   constructor(canvas) {
@@ -26,6 +26,11 @@ export default class SpotsGame {
   }
   render(timeDelta) {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);
+    if (this.board.squared) {
+      document.body.style.backgroundColor = getColorAtReducedOpacity(this.board.moveColor, 0.25);
+    } else {
+      document.body.style.backgroundColor = '';
+    }
 
     this.board.draw(this.ctx, this.cursorPos, timeDelta);
   }

@@ -43,14 +43,14 @@ export default class Board {
       const spotBeforeTail = this.getSpotBeforeTail();
       if (spotBeforeTail && spotBeforeTail === activeSpot) {
         this.removeLastConnection();
-        this.checkForLoops();
+        this.checkForSquares();
       } else if (!connectionAreadyExists) {
         this.addSpotToMove(activeSpot);
-        this.checkForLoops();
+        this.checkForSquares();
       }
     }
   }
-  checkForLoops() {
+  checkForSquares() {
     const seenSpots = new Set();
     let squared = false;
     this.lines.forEach(({ startSpot }) => {
@@ -59,6 +59,18 @@ export default class Board {
         squared = true;
       }
       seenSpots.add(posAsString);
+    });
+
+    const moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
+    this.grid.forEach(row => {
+      row.forEach(spot => {
+        // if (spot.color !== moveColor) return;
+        if (spot.color === moveColor && squared) {
+          spot.setActive();
+        } else if (!this.selectedSpots.find(selected => selected === spot)) {
+          spot.setInactive();
+        }
+      });
     });
 
     this.squared = squared;

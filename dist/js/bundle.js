@@ -220,6 +220,22 @@
 	  }
 	
 	  _createClass(Board, [{
+	    key: 'addAllSpotsOfColorToMove',
+	    value: function addAllSpotsOfColorToMove() {
+	      var _this = this;
+	
+	      var moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
+	      this.grid.forEach(function (row) {
+	        row.forEach(function (spot) {
+	          if (spot.color === moveColor && !_this.selectedSpots.find(function (selected) {
+	            return selected === spot;
+	          })) {
+	            _this.selectedSpots.push(spot);
+	          }
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'addSpotToMove',
 	    value: function addSpotToMove(spot) {
 	      spot.setActive();
@@ -275,7 +291,7 @@
 	  }, {
 	    key: 'checkForSquares',
 	    value: function checkForSquares() {
-	      var _this = this;
+	      var _this2 = this;
 	
 	      var seenSpots = new Set();
 	      var squared = false;
@@ -292,10 +308,9 @@
 	      var moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
 	      this.grid.forEach(function (row) {
 	        row.forEach(function (spot) {
-	          // if (spot.color !== moveColor) return;
 	          if (spot.color === moveColor && squared) {
 	            spot.setActive();
-	          } else if (!_this.selectedSpots.find(function (selected) {
+	          } else if (!_this2.selectedSpots.find(function (selected) {
 	            return selected === spot;
 	          })) {
 	            spot.setInactive();
@@ -314,7 +329,7 @@
 	  }, {
 	    key: 'draw',
 	    value: function draw(ctx, cursorPos, timeDelta) {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      this.squareSize = ctx.canvas.offsetWidth / this.grid.length;
 	
@@ -324,7 +339,7 @@
 	
 	      this.grid.forEach(function (row) {
 	        return row.forEach(function (spot) {
-	          return spot.draw(ctx, _this2.squareSize, cursorPos, timeDelta);
+	          return spot.draw(ctx, _this3.squareSize, cursorPos, timeDelta);
 	        });
 	      });
 	      this.lines.forEach(function (line) {
@@ -398,28 +413,31 @@
 	  }, {
 	    key: 'tallyAndRemoveSpots',
 	    value: function tallyAndRemoveSpots() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
+	      if (this.squared) {
+	        this.addAllSpotsOfColorToMove();
+	      }
 	      var points = this.selectedSpots.length;
 	      this.selectedSpots.forEach(function (spot) {
 	        var _spot$pos = spot.pos,
 	            column = _spot$pos.x,
 	            row = _spot$pos.y;
 	
-	        _this3.grid[row][column] = null;
+	        _this4.grid[row][column] = null;
 	        for (var y = row; y > 0; y--) {
 	          // this swaps out the positions of the spots so that it shifts them "down" (higher index)
-	          _this3.grid[y][column] = _this3.grid[y - 1][column];
-	          _this3.grid[y - 1][column] = null;
-	          _this3.grid[y][column].pos.y = y;
+	          _this4.grid[y][column] = _this4.grid[y - 1][column];
+	          _this4.grid[y - 1][column] = null;
+	          _this4.grid[y][column].pos.y = y;
 	
-	          if (_this3.grid[y][column]) {
-	            _this3.grid[y][column].animateFromPreviousHeight(y - 1);
+	          if (_this4.grid[y][column]) {
+	            _this4.grid[y][column].animateFromPreviousHeight(y - 1);
 	          }
 	        }
 	        var replacementPos = { x: column, y: 0 };
 	        var replacementSpot = new _Spot2.default({ pos: replacementPos, color: (0, _util.randomColor)() });
-	        _this3.grid[0][column] = replacementSpot;
+	        _this4.grid[0][column] = replacementSpot;
 	        replacementSpot.animateFromPreviousHeight(-1);
 	      });
 	      this.clearMove();

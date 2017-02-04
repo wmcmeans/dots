@@ -8,6 +8,16 @@ export default class Board {
     this.lines = [];
     this.setup();
   }
+  addAllSpotsOfColorToMove() {
+    const moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
+    this.grid.forEach(row => {
+      row.forEach(spot => {
+        if (spot.color === moveColor && !this.selectedSpots.find(selected => selected === spot)) {
+          this.selectedSpots.push(spot);
+        }
+      });
+    });
+  }
   addSpotToMove(spot) {
     spot.setActive();
     const line = new Line(spot);
@@ -64,7 +74,6 @@ export default class Board {
     const moveColor = this.selectedSpots[0] && this.selectedSpots[0].color;
     this.grid.forEach(row => {
       row.forEach(spot => {
-        // if (spot.color !== moveColor) return;
         if (spot.color === moveColor && squared) {
           spot.setActive();
         } else if (!this.selectedSpots.find(selected => selected === spot)) {
@@ -142,6 +151,9 @@ export default class Board {
     }
   }
   tallyAndRemoveSpots() {
+    if (this.squared) {
+      this.addAllSpotsOfColorToMove();
+    }
     const points = this.selectedSpots.length;
     this.selectedSpots.forEach(spot => {
       const { x: column, y: row } = spot.pos;

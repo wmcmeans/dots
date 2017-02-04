@@ -103,6 +103,17 @@
 	      this.board.beginMove(this.cursorPos);
 	    }
 	  }, {
+	    key: 'addBorderAndBG',
+	    value: function addBorderAndBG() {
+	      if (this.board.squared) {
+	        document.body.style.backgroundColor = (0, _util.getColorAtReducedOpacity)(this.board.moveColor, 0.25);
+	        document.body.style.borderColor = (0, _util.getColorAtReducedOpacity)(this.board.moveColor);
+	      } else {
+	        document.body.style.backgroundColor = '';
+	        document.body.style.borderColor = 'transparent';
+	      }
+	    }
+	  }, {
 	    key: 'endMove',
 	    value: function endMove() {
 	      this.moving = false;
@@ -115,11 +126,7 @@
 	    key: 'render',
 	    value: function render(timeDelta) {
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
-	      if (this.board.squared) {
-	        document.body.style.backgroundColor = (0, _util.getColorAtReducedOpacity)(this.board.moveColor, 0.25);
-	      } else {
-	        document.body.style.backgroundColor = '';
-	      }
+	      this.addBorderAndBG();
 	
 	      this.board.draw(this.ctx, this.cursorPos, timeDelta);
 	    }

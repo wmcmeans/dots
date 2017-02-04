@@ -17,6 +17,16 @@ export default class SpotsGame {
     this.moving = true;
     this.board.beginMove(this.cursorPos);
   }
+  addBorderAndBG() {
+    if (this.board.squared) {
+      document.body.style.backgroundColor = getColorAtReducedOpacity(this.board.moveColor, 0.25);
+      document.body.style.borderColor = getColorAtReducedOpacity(this.board.moveColor);
+    } else {
+      document.body.style.backgroundColor = '';
+      document.body.style.borderColor = 'transparent';
+    }
+
+  }
   endMove() {
     this.moving = false;
     const points = this.board.endMove();
@@ -26,11 +36,7 @@ export default class SpotsGame {
   }
   render(timeDelta) {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);
-    if (this.board.squared) {
-      document.body.style.backgroundColor = getColorAtReducedOpacity(this.board.moveColor, 0.25);
-    } else {
-      document.body.style.backgroundColor = '';
-    }
+    this.addBorderAndBG();
 
     this.board.draw(this.ctx, this.cursorPos, timeDelta);
   }

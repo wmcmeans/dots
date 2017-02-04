@@ -35,8 +35,14 @@ export const fixCanvasBlur = (canvas) => {
   const ratio = devicePixelRatio / backingStoreRatio;
 
   if (devicePixelRatio !== backingStoreRatio) {
-    const oldWidth = canvas.width;
-    const oldHeight = canvas.height;
+    let oldWidth = canvas.width;
+    let oldHeight = canvas.height;
+
+    if (canvas.width > (window.innerWidth * 1.1)) {
+      const shrinkToFitScreenRatio = window.innerWidth / (canvas.width * 1.1);
+      oldWidth *= shrinkToFitScreenRatio;
+      oldHeight *= shrinkToFitScreenRatio;
+    }
 
     canvas.width = oldWidth * ratio;
     canvas.height = oldHeight * ratio;
@@ -44,9 +50,6 @@ export const fixCanvasBlur = (canvas) => {
     canvas.style.width = `${oldWidth}px`;
     canvas.style.height = `${oldHeight}px`;
 
-    // now scale the context to counter
-    // the fact that we've manually scaled
-    // our canvas element
     context.scale(ratio, ratio);
   }
 };

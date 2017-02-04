@@ -739,15 +739,18 @@
 	    var oldWidth = canvas.width;
 	    var oldHeight = canvas.height;
 	
+	    if (canvas.width > window.innerWidth * 1.1) {
+	      var shrinkToFitScreenRatio = window.innerWidth / (canvas.width * 1.1);
+	      oldWidth *= shrinkToFitScreenRatio;
+	      oldHeight *= shrinkToFitScreenRatio;
+	    }
+	
 	    canvas.width = oldWidth * ratio;
 	    canvas.height = oldHeight * ratio;
 	
 	    canvas.style.width = oldWidth + 'px';
 	    canvas.style.height = oldHeight + 'px';
 	
-	    // now scale the context to counter
-	    // the fact that we've manually scaled
-	    // our canvas element
 	    context.scale(ratio, ratio);
 	  }
 	};

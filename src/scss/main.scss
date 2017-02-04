@@ -3,6 +3,8 @@
   font-family: 'Nunito';
 }
 
+$border-width: 0.625rem;
+
 /* RESET */
 html, body, header, nav, h1, h2, h3, h4, h5, h6, a,
 ul, li, strong, main, button, i,
@@ -23,44 +25,90 @@ span, article, footer, time, small {
   list-style: none;
 }
 
+html {
+  font-size: 10px;
+}
+
+@media (min-width: 800px) {
+  html {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1025px) {
+  html {
+    font-size: 15px;
+  }
+}
+@media (min-width: 1441px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media (min-width: 1681px) {
+  html {
+    font-size: 18px;
+  }
+}
+
 body {
   min-height: 100vh;
   box-sizing: border-box;
-  border-width: 10px;
+  border-width: $border-width;
   border-style: solid;
   border-color: transparent;
 }
 
 .content {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  min-height: 100vh;
+  justify-content: space-around;
+  height: calc(100vh - #{$border-width * 2});
 }
 
-.game-text {
+// @media screen and (max-aspect-ratio: 7/8) {
+//   .content {
+//     width:
+//   }
+// }
+
+.text-container {
+  // flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
+  width: 26rem;
   @include default-font;
-  .game-title {
-    color: rgb(158, 158, 158);
-    margin-top: 10px;
-    font-size: 2.625rem;
-    font-weight: 800;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    opacity: 0.7;
-    cursor: default;
+  .game-text {
+    .game-title {
+      color: rgba(158, 158, 158, 0.5);
+      font-size: 3.5rem;
+      @media (min-width: 800px) {
+          font-size: 4rem;
+      }
+      @media (min-width: 1025px) {
+          font-size: 4.5rem;
+      }
+      font-weight: 800;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      cursor: default;
+    }
+    .score-board {
+      font-size: 2rem;
+    }
+  }
+  .credits {
+    font-size: 1.2rem;
+    a {
+      color: rgb(138, 189, 255);
+    }
   }
 }
+
 
 .canvas-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.credits {
-  @include default-font;
-  font-size: 1.2rem;
-  a {
-    color: rgb(138, 189, 255);
-  }
+  // flex: 2 0 0;
+  // display: flex;
+  // justify-content: center;
 }

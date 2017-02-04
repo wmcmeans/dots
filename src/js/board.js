@@ -35,6 +35,13 @@ export default class Board {
     const activeSpot = this.findActiveSpot(cursorPos);
     const tail = this.getTailSpot();
     if (activeSpot && activeSpot !== tail && tail.canConnectWith(activeSpot)) {
+      const connectionAreadyExists = this.lines.find(({ startSpot, endSpot }) => (
+        (startSpot === tail && endSpot === activeSpot) ||
+        (startSpot === activeSpot && endSpot === tail)
+      ));
+
+      if (connectionAreadyExists) return;
+
       const spotBeforeTail = this.getSpotBeforeTail();
       if (spotBeforeTail && spotBeforeTail === activeSpot) {
         this.removeLastConnection();

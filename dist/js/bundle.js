@@ -256,6 +256,14 @@
 	      var activeSpot = this.findActiveSpot(cursorPos);
 	      var tail = this.getTailSpot();
 	      if (activeSpot && activeSpot !== tail && tail.canConnectWith(activeSpot)) {
+	        var connectionAreadyExists = this.lines.find(function (_ref) {
+	          var startSpot = _ref.startSpot,
+	              endSpot = _ref.endSpot;
+	          return startSpot === tail && endSpot === activeSpot || startSpot === activeSpot && endSpot === tail;
+	        });
+	
+	        if (connectionAreadyExists) return;
+	
 	        var spotBeforeTail = this.getSpotBeforeTail();
 	        if (spotBeforeTail && spotBeforeTail === activeSpot) {
 	          this.removeLastConnection();

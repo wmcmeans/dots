@@ -262,12 +262,10 @@
 	          return startSpot === tail && endSpot === activeSpot || startSpot === activeSpot && endSpot === tail;
 	        });
 	
-	        if (connectionAreadyExists) return;
-	
 	        var spotBeforeTail = this.getSpotBeforeTail();
 	        if (spotBeforeTail && spotBeforeTail === activeSpot) {
 	          this.removeLastConnection();
-	        } else {
+	        } else if (!connectionAreadyExists) {
 	          this.addSpotToMove(activeSpot);
 	        }
 	      }

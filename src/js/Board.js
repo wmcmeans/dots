@@ -103,6 +103,7 @@ export default class Board {
   }
   endMove() {
     this.moving = false;
+    debugger
     if (this.selectedSpots.length > 1) {
       return this.tallyAndRemoveSpots();
     }

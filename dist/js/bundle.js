@@ -165,8 +165,25 @@
 	      this.board.draw(this.ctx, this.cursorPos, timeDelta);
 	    }
 	  }, {
+	    key: 'reset',
+	    value: function reset() {
+	      this.endGameDom.canvasContainer.classList.remove('game-over');
+	      this.over = false;
+	      this.score = 0;
+	      this.board = new _Board2.default();
+	      this.setupScoreBoard();
+	      this.start();
+	    }
+	  }, {
 	    key: 'setupGameOverText',
 	    value: function setupGameOverText() {
+	      var _this2 = this;
+	
+	      (0, _util.queryEl)('#new-game-btn').addEventListener('click', function (e) {
+	        e.preventDefault();
+	        _this2.reset();
+	      });
+	
 	      this.endGameDom = {
 	        canvasContainer: (0, _util.queryEl)('#canvas-container'),
 	        gameOverText: (0, _util.queryEl)('#game-over-text'),
@@ -175,8 +192,6 @@
 	        highScoreTextNodes: (0, _util.queryElAll)('.high-score-text'),
 	        thisScoreTextNode: (0, _util.queryEl)('#this-score-text')
 	      };
-	
-	      this.endGameDom.canvasContainer.classList.remove('game-over');
 	    }
 	  }, {
 	    key: 'setupScoreBoard',
@@ -193,17 +208,17 @@
 	  }, {
 	    key: 'start',
 	    value: function start() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var animate = function animate(time) {
-	        var timeDelta = time - _this2.lastTime;
-	        _this2.lastTime = time;
+	        var timeDelta = time - _this3.lastTime;
+	        _this3.lastTime = time;
 	
-	        _this2.render(timeDelta);
-	        if (!_this2.over) {
+	        _this3.render(timeDelta);
+	        if (!_this3.over) {
 	          window.requestAnimationFrame(animate);
 	        } else {
-	          _this2.clearCanvas();
+	          _this3.clearCanvas();
 	        }
 	      };
 	      animate(0);
@@ -212,36 +227,36 @@
 	  }, {
 	    key: 'trackCursor',
 	    value: function trackCursor() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      this.cursorPos = { x: 0, y: 0 };
 	
 	      document.addEventListener('mousemove', function (e) {
-	        return _this3.cursorPos = (0, _util.getCursorPos)(_this3.ctx.canvas, e);
+	        return _this4.cursorPos = (0, _util.getCursorPos)(_this4.ctx.canvas, e);
 	      });
 	
 	      document.addEventListener('touchmove', function (e) {
-	        return _this3.cursorPos = (0, _util.getTouchPos)(_this3.ctx.canvas, e);
+	        return _this4.cursorPos = (0, _util.getTouchPos)(_this4.ctx.canvas, e);
 	      });
 	    }
 	  }, {
 	    key: 'trackMoves',
 	    value: function trackMoves() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      this.ctx.canvas.addEventListener('mousedown', function () {
-	        return _this4.beginMove();
+	        return _this5.beginMove();
 	      });
 	      this.ctx.canvas.addEventListener('touchstart', function (e) {
-	        _this4.cursorPos = (0, _util.getTouchPos)(_this4.ctx.canvas, e);
-	        _this4.beginMove();
+	        _this5.cursorPos = (0, _util.getTouchPos)(_this5.ctx.canvas, e);
+	        _this5.beginMove();
 	      });
 	
 	      window.addEventListener('mouseup', function () {
-	        return _this4.endMove();
+	        return _this5.endMove();
 	      });
 	      window.addEventListener('touchend', function () {
-	        return _this4.endMove();
+	        return _this5.endMove();
 	      });
 	    }
 	  }, {
@@ -439,6 +454,7 @@
 	    key: 'endMove',
 	    value: function endMove() {
 	      this.moving = false;
+	      debugger;
 	      if (this.selectedSpots.length > 1) {
 	        return this.tallyAndRemoveSpots();
 	      }

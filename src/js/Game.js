@@ -69,7 +69,20 @@ export default class SpotsGame {
 
     this.board.draw(this.ctx, this.cursorPos, timeDelta);
   }
+  reset() {
+    this.endGameDom.canvasContainer.classList.remove('game-over');
+    this.over = false;
+    this.score = 0;
+    this.board = new Board();
+    this.setupScoreBoard();
+    this.start();
+  }
   setupGameOverText() {
+    queryEl('#new-game-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      this.reset();
+    });
+
     this.endGameDom = {
       canvasContainer: queryEl('#canvas-container'),
       gameOverText: queryEl('#game-over-text'),
@@ -78,8 +91,6 @@ export default class SpotsGame {
       highScoreTextNodes: queryElAll('.high-score-text'),
       thisScoreTextNode: queryEl('#this-score-text'),
     };
-
-    this.endGameDom.canvasContainer.classList.remove('game-over');
   }
   setupScoreBoard() {
     this.gameTracker = {

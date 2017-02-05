@@ -103,7 +103,8 @@ body {
     display: block; }
 
 .canvas-container.game-over .spots-game {
-  display: none; }
+  visibility: hidden;
+  height: 1px !important; }
 
 .canvas-container.game-over .game-over-text {
   display: block; }

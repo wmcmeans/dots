@@ -133,7 +133,9 @@ body {
   }
   &.game-over {
     .spots-game {
-      display: none;
+      // this prevents the elements from changing size once the canvas "disappears"
+      visibility: hidden;
+      height: 1px !important;
     }
     .game-over-text {
       display: block;

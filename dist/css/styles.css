@@ -113,9 +113,9 @@ body {
   border-radius: 5px;
   padding: 5px 10px;
   margin-top: 8px;
-  border: 4px solid #65ccbc;
+  border: 4px solid rgba(255, 255, 255, 0.3);
   transition: border-color 1000ms;
   cursor: pointer;
   font-weight: 800; }
   .new-game-btn:hover {
-    border-color: red; }
+    border-color: white; }

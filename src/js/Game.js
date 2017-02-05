@@ -10,12 +10,15 @@ import {
 } from './util';
 
 export default class SpotsGame {
-  constructor(canvas) {
+  constructor(canvas, alreadyPlayed) {
     this.xDim = canvas.offsetWidth;
     this.yDim = canvas.offsetHeight;
     this.ctx = canvas.getContext('2d');
-    fixCanvasBlur(canvas);
+    if (!alreadyPlayed) {
+      fixCanvasBlur(canvas);
+    }
 
+    this.listenerRemoves = [];
     this.trackCursor();
 
     this.board = new Board();
@@ -73,6 +76,8 @@ export default class SpotsGame {
     this.endGameDom.canvasContainer.classList.remove('game-over');
     this.over = false;
     this.score = 0;
+    this.listenerRemoves.forEach(func => func());
+    this.trackCursor();
     this.board = new Board();
     this.setupScoreBoard();
     this.start();
@@ -120,23 +125,34 @@ export default class SpotsGame {
   trackCursor() {
     this.cursorPos = { x: 0, y: 0 };
 
-    document.addEventListener('mousemove', (e) => (
-      this.cursorPos = getCursorPos(this.ctx.canvas, e)
-    ));
+    const mouseMoveListen = (e) => (this.cursorPos = getCursorPos(this.ctx.canvas, e));
+    const touchMoveListen = (e) => (this.cursorPos = getTouchPos(this.ctx.canvas, e));
 
-    document.addEventListener('touchmove', (e) => (
-      this.cursorPos = getTouchPos(this.ctx.canvas, e)
-    ));
+    document.addEventListener('mousemove', mouseMoveListen);
+    document.addEventListener('touchmove', touchMoveListen);
+
+    this.listenerRemoves.push(() => document.removeEventListener('mousemove', mouseMoveListen));
+    this.listenerRemoves.push(() => document.removeEventListener('touchmove', touchMoveListen));
   }
   trackMoves() {
-    this.ctx.canvas.addEventListener('mousedown', () => this.beginMove());
-    this.ctx.canvas.addEventListener('touchstart', (e) => {
+    const mouseDownListen = () => this.beginMove();
+    const touchStartListen = (e) => {
       this.cursorPos = getTouchPos(this.ctx.canvas, e);
       this.beginMove();
-    });
+    };
 
+    this.ctx.canvas.addEventListener('mousedown', mouseDownListen);
+    this.ctx.canvas.addEventListener('touchstart', touchStartListen);
+
+    this.listenerRemoves.push(() => document.removeEventListener('mousedown', mouseDownListen));
+    this.listenerRemoves.push(() => document.removeEventListener('touchstart', touchStartListen));
+
+    const endMoveListen = () => this.endMove();
     window.addEventListener('mouseup', () => this.endMove());
     window.addEventListener('touchend', () => this.endMove());
+
+    this.listenerRemoves.push(() => document.removeEventListener('mouseup', endMoveListen));
+    this.listenerRemoves.push(() => document.removeEventListener('touchend', endMoveListen));
   }
   updateHighScoreIfBeaten() {
     this.highScore = parseInt(localStorage.getItem(HIGH_SCORE), 10);

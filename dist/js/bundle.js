@@ -84,14 +84,17 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var SpotsGame = function () {
-	  function SpotsGame(canvas) {
+	  function SpotsGame(canvas, alreadyPlayed) {
 	    _classCallCheck(this, SpotsGame);
 	
 	    this.xDim = canvas.offsetWidth;
 	    this.yDim = canvas.offsetHeight;
 	    this.ctx = canvas.getContext('2d');
-	    (0, _util.fixCanvasBlur)(canvas);
+	    if (!alreadyPlayed) {
+	      (0, _util.fixCanvasBlur)(canvas);
+	    }
 	
+	    this.listenerRemoves = [];
 	    this.trackCursor();
 	
 	    this.board = new _Board2.default();
@@ -170,6 +173,10 @@
 	      this.endGameDom.canvasContainer.classList.remove('game-over');
 	      this.over = false;
 	      this.score = 0;
+	      this.listenerRemoves.forEach(function (func) {
+	        return func();
+	      });
+	      this.trackCursor();
 	      this.board = new _Board2.default();
 	      this.setupScoreBoard();
 	      this.start();
@@ -231,12 +238,21 @@
 	
 	      this.cursorPos = { x: 0, y: 0 };
 	
-	      document.addEventListener('mousemove', function (e) {
+	      var mouseMoveListen = function mouseMoveListen(e) {
 	        return _this4.cursorPos = (0, _util.getCursorPos)(_this4.ctx.canvas, e);
-	      });
-	
-	      document.addEventListener('touchmove', function (e) {
+	      };
+	      var touchMoveListen = function touchMoveListen(e) {
 	        return _this4.cursorPos = (0, _util.getTouchPos)(_this4.ctx.canvas, e);
+	      };
+	
+	      document.addEventListener('mousemove', mouseMoveListen);
+	      document.addEventListener('touchmove', touchMoveListen);
+	
+	      this.listenerRemoves.push(function () {
+	        return document.removeEventListener('mousemove', mouseMoveListen);
+	      });
+	      this.listenerRemoves.push(function () {
+	        return document.removeEventListener('touchmove', touchMoveListen);
 	      });
 	    }
 	  }, {
@@ -244,19 +260,39 @@
 	    value: function trackMoves() {
 	      var _this5 = this;
 	
-	      this.ctx.canvas.addEventListener('mousedown', function () {
+	      var mouseDownListen = function mouseDownListen() {
 	        return _this5.beginMove();
-	      });
-	      this.ctx.canvas.addEventListener('touchstart', function (e) {
+	      };
+	      var touchStartListen = function touchStartListen(e) {
 	        _this5.cursorPos = (0, _util.getTouchPos)(_this5.ctx.canvas, e);
 	        _this5.beginMove();
+	      };
+	
+	      this.ctx.canvas.addEventListener('mousedown', mouseDownListen);
+	      this.ctx.canvas.addEventListener('touchstart', touchStartListen);
+	
+	      this.listenerRemoves.push(function () {
+	        return document.removeEventListener('mousedown', mouseDownListen);
+	      });
+	      this.listenerRemoves.push(function () {
+	        return document.removeEventListener('touchstart', touchStartListen);
 	      });
 	
+	      var endMoveListen = function endMoveListen() {
+	        return _this5.endMove();
+	      };
 	      window.addEventListener('mouseup', function () {
 	        return _this5.endMove();
 	      });
 	      window.addEventListener('touchend', function () {
 	        return _this5.endMove();
+	      });
+	
+	      this.listenerRemoves.push(function () {
+	        return document.removeEventListener('mouseup', endMoveListen);
+	      });
+	      this.listenerRemoves.push(function () {
+	        return document.removeEventListener('touchend', endMoveListen);
 	      });
 	    }
 	  }, {
@@ -454,7 +490,6 @@
 	    key: 'endMove',
 	    value: function endMove() {
 	      this.moving = false;
-	      debugger;
 	      if (this.selectedSpots.length > 1) {
 	        return this.tallyAndRemoveSpots();
 	      }

@@ -6,5 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const game = new SpotsGame(canvas);
   game.start();
 
-  queryEl('#new-game-btn').addEventListener('click', () => window.location.reload());
+  queryEl('#new-game-btn').addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.reload();
+  });
 });

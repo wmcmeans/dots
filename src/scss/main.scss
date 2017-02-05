@@ -78,6 +78,15 @@ body {
   height: calc(100vh - #{$border-width * 2});
 }
 
+@media (max-width: 1024px) and (min-aspect-ratio: 5/4) {
+  .content {
+    flex-wrap: nowrap;
+  }
+  body {
+    min-height: auto;
+  }
+}
+
 .text-container {
   display: flex;
   flex-direction: column;
@@ -99,7 +108,10 @@ body {
       cursor: default;
     }
     .directions {
-      padding: 12px;
+      padding: 12px 0;
+      @media (max-width: 1024px) {
+          font-size: 1.3rem;
+      }
     }
     .score-board {
       font-size: 2rem;

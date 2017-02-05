@@ -42,6 +42,10 @@ export const fixCanvasBlur = (canvas) => {
       const shrinkToFitScreenRatio = window.innerWidth / (canvas.width * 1.1);
       oldWidth *= shrinkToFitScreenRatio;
       oldHeight *= shrinkToFitScreenRatio;
+    } else if (canvas.height > window.innerHeight * 1.1) {
+      const shrinkToFitScreenRatio = window.innerHeight / (canvas.height * 1.1);
+      oldWidth *= shrinkToFitScreenRatio;
+      oldHeight *= shrinkToFitScreenRatio;
     }
 
     canvas.width = oldWidth * ratio;

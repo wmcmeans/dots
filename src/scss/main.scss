@@ -1,6 +1,6 @@
 @mixin default-font {
   text-align: center;
-  font-family: 'Nunito';
+  font-family: 'Helvetica';
 }
 
 $border-width: 0.625rem;
@@ -94,7 +94,7 @@ body {
           font-size: 4.5rem;
       }
       font-weight: 800;
-      letter-spacing: 5px;
+      letter-spacing: 0.8rem;
       text-transform: uppercase;
       cursor: default;
     }

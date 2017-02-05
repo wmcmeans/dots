@@ -39,7 +39,7 @@ html {
 
 body {
   text-align: center;
-  font-family: 'Nunito';
+  font-family: 'Helvetica';
   min-height: 100vh;
   box-sizing: border-box;
   border-width: 0.625rem;
@@ -73,7 +73,7 @@ body {
     color: rgba(255, 255, 255, 0.7);
     font-size: 3.5rem;
     font-weight: 800;
-    letter-spacing: 5px;
+    letter-spacing: 0.8rem;
     text-transform: uppercase;
     cursor: default; }
     @media (min-width: 800px) {

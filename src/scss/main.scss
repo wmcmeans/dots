@@ -78,6 +78,14 @@ body {
   height: calc(100vh - #{$border-width * 2});
 }
 
+@media screen and (max-width:1024px) and (min-aspect-ratio: 5/4) {
+  .content {
+    // flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
+
 .text-container {
   display: flex;
   flex-direction: column;

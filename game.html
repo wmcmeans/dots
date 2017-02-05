@@ -4,23 +4,47 @@
     <meta charset="utf-8">
     <title>Spots</title>
     <link rel="stylesheet" href="dist/css/styles.css" charset="utf-8">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700|Fredoka+One' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <h1 class='game-title'>
-      <span id="title-ltr1">S</span>
-      <span id="title-ltr2">p</span>
-      <span id="title-ltr3">o</span>
-      <span id="title-ltr4">t</span>
-      <span id="title-ltr5">s</span>
-    </h1>
-    <figure class="dots-game"></figure>
-    <h4 class="link-out">
-      Game by Will McMeans (<a target="_blank" href="http://willmcmeans.com">Portfolio</a>,
-      <a target="_blank" href="https://github.com/wmcmeans">GitHub</a>)
-    </h4>
-    <!-- <script src="./lib/jquery-2.2.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script> -->
+    <div class="content">
+      <div class="text-container">
+        <div class="game-text">
+          <h1 class="game-title">
+            Spots
+          </h1>
+          <h3 class="score-board">
+            Score: <span id="score"></span>,
+            Moves left: <span id="moves-left"></span>
+          </h3>
+          <p class="directions">
+            Directions: Connect dots of the same color to score points. Form rectangles to collect all dots of the same color.
+          </p>
+        </div>
+        <div class="credits">
+          <p class="link-out">
+            By <a target="_blank" href="http://willmcmeans.com">Will McMeans</a>
+          </p>
+        </div>
+      </div>
+      <div class="canvas-container" id="canvas-container">
+        <div class="game-over-text" id="game-over-text">
+            <p class="new-high-score" id="new-high-score">
+              Congratulations! You scored a new personal high score.<br>
+              New high score: <span class="high-score-text"></span>
+            </p>
+            <p class="same-high-score" id="same-high-score">
+              You scored <span id="this-score-text"></span> points.<br>
+              Your high score is <span class="high-score-text"></span>.
+            </p>
+            <button type="button" name="button" class="new-game-btn" id="new-game-btn">
+              New Game
+            </button>
+        </div>
+        <canvas class="spots-game" id="spots-game" width="600px" height="600px"></canvas>
+      </div>
+    </div>
     <script src="./dist/js/bundle.js"></script>
   </body>
 </html>

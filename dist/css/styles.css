@@ -18,7 +18,8 @@ span, article, footer, time, small {
   list-style: none; }
 
 html {
-  font-size: 10px; }
+  font-size: 10px;
+  color: #FFFFFF; }
 
 @media (min-width: 800px) {
   html {
@@ -43,7 +44,18 @@ body {
   box-sizing: border-box;
   border-width: 0.625rem;
   border-style: solid;
-  border-color: transparent; }
+  border-color: transparent;
+  background: linear-gradient(270deg, rgba(0, 0, 255, 0.7), rgba(255, 0, 144, 0.7));
+  background-size: 400% 400%;
+  animation: Gradient 10s ease infinite; }
+
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%; }
+  50% {
+    background-position: 100% 50%; }
+  100% {
+    background-position: 0% 50%; } }
 
 .content {
   display: flex;
@@ -58,7 +70,7 @@ body {
   padding: 1.2rem;
   width: 26rem; }
   .text-container .game-text .game-title {
-    color: rgba(158, 158, 158, 0.5);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 3.5rem;
     font-weight: 800;
     letter-spacing: 5px;
@@ -78,9 +90,10 @@ body {
   .text-container .credits {
     font-size: 1.2rem; }
     .text-container .credits a {
-      color: #8abdff; }
+      text-decoration: underline; }
 
 .canvas-container .game-over-text {
+  font-size: 1.3rem;
   display: none; }
   .canvas-container .game-over-text .new-high-score {
     display: none; }
@@ -94,3 +107,15 @@ body {
 
 .canvas-container.game-over .game-over-text {
   display: block; }
+
+.new-game-btn {
+  font-size: 2rem;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-top: 8px;
+  border: 4px solid #65ccbc;
+  transition: border-color 1000ms;
+  cursor: pointer;
+  font-weight: 800; }
+  .new-game-btn:hover {
+    border-color: red; }

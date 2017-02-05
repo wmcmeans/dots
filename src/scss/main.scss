@@ -51,6 +51,7 @@ html {
 }
 
 body {
+  @include default-font;
   min-height: 100vh;
   box-sizing: border-box;
   border-width: $border-width;
@@ -78,7 +79,6 @@ body {
   flex-direction: column;
   padding: 1.2rem;
   width: 26rem;
-  @include default-font;
   .game-text {
     .game-title {
       color: rgba(158, 158, 158, 0.5);
@@ -94,8 +94,12 @@ body {
       text-transform: uppercase;
       cursor: default;
     }
+    .directions {
+      padding: 12px;
+    }
     .score-board {
       font-size: 2rem;
+      font-weight: 600;
     }
   }
   .credits {
@@ -108,6 +112,28 @@ body {
 
 
 .canvas-container {
+  .game-over-text {
+    display: none;
+    .new-high-score {
+      display: none;
+    }
+    &.new-high-score {
+      .same-high-score {
+        display: none;
+      }
+      .new-high-score {
+        display: block;
+      }
+    }
+  }
+  &.game-over {
+    .spots-game {
+      display: none;
+    }
+    .game-over-text {
+      display: block;
+    }
+  }
   // flex: 2 0 0;
   // display: flex;
   // justify-content: center;

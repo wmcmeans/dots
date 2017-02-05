@@ -1,10 +1,12 @@
 import Board from './Board';
+import { HIGH_SCORE } from './constants';
 import {
   fixCanvasBlur,
   getCursorPos,
   getTouchPos,
   getColorAtReducedOpacity,
   queryEl,
+  queryElAll,
 } from './util';
 
 export default class SpotsGame {
@@ -18,6 +20,7 @@ export default class SpotsGame {
 
     this.board = new Board();
     this.setupScoreBoard();
+    this.setupGameOverText();
   }
   addBorderAndBG() {
     if (this.board.squared) {
@@ -35,8 +38,20 @@ export default class SpotsGame {
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.xDim, this.yDim);
   }
+  displayGameOverText() {
+    this.endGameDom.highScoreTextNodes.forEach(span => span.textContent = this.highScore);
+    this.endGameDom.thisScoreTextNode.textContent = this.score;
+    if (this.newHighScore) {
+      this.endGameDom.gameOverText.classList.add('new-high-score');
+    } else {
+      this.endGameDom.gameOverText.classList.remove('new-high-score');
+    }
+    this.endGameDom.canvasContainer.classList.add('game-over');
+  }
   end() {
     this.over = true;
+    this.updateHighScoreIfBeaten();
+    this.displayGameOverText();
   }
   endMove() {
     this.moving = false;
@@ -53,6 +68,18 @@ export default class SpotsGame {
     this.addBorderAndBG();
 
     this.board.draw(this.ctx, this.cursorPos, timeDelta);
+  }
+  setupGameOverText() {
+    this.endGameDom = {
+      canvasContainer: queryEl('#canvas-container'),
+      gameOverText: queryEl('#game-over-text'),
+      newHighScoreText: queryEl('#new-high-score'),
+      sameHighScoreText: queryEl('#same-high-score'),
+      highScoreTextNodes: queryElAll('.high-score-text'),
+      thisScoreTextNode: queryEl('#this-score-text'),
+    };
+
+    this.endGameDom.canvasContainer.classList.remove('game-over');
   }
   setupScoreBoard() {
     this.gameTracker = {
@@ -99,6 +126,15 @@ export default class SpotsGame {
 
     window.addEventListener('mouseup', () => this.endMove());
     window.addEventListener('touchend', () => this.endMove());
+  }
+  updateHighScoreIfBeaten() {
+    this.highScore = parseInt(localStorage.getItem(HIGH_SCORE), 10);
+    this.newHighScore = false;
+    if (this.score > this.highScore || Number.isNaN(this.highScore)) {
+      this.newHighScore = true;
+      this.highScore = this.score;
+      localStorage.setItem(HIGH_SCORE, this.score);
+    }
   }
   updateScore(points = 0) {
     this.score += points;

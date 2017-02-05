@@ -37,6 +37,8 @@ html {
     font-size: 18px; } }
 
 body {
+  text-align: center;
+  font-family: 'Nunito';
   min-height: 100vh;
   box-sizing: border-box;
   border-width: 0.625rem;
@@ -54,9 +56,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 1.2rem;
-  width: 26rem;
-  text-align: center;
-  font-family: 'Nunito'; }
+  width: 26rem; }
   .text-container .game-text .game-title {
     color: rgba(158, 158, 158, 0.5);
     font-size: 3.5rem;
@@ -70,9 +70,27 @@ body {
     @media (min-width: 1025px) {
       .text-container .game-text .game-title {
         font-size: 4.5rem; } }
+  .text-container .game-text .directions {
+    padding: 12px; }
   .text-container .game-text .score-board {
-    font-size: 2rem; }
+    font-size: 2rem;
+    font-weight: 600; }
   .text-container .credits {
     font-size: 1.2rem; }
     .text-container .credits a {
       color: #8abdff; }
+
+.canvas-container .game-over-text {
+  display: none; }
+  .canvas-container .game-over-text .new-high-score {
+    display: none; }
+  .canvas-container .game-over-text.new-high-score .same-high-score {
+    display: none; }
+  .canvas-container .game-over-text.new-high-score .new-high-score {
+    display: block; }
+
+.canvas-container.game-over .spots-game {
+  display: none; }
+
+.canvas-container.game-over .game-over-text {
+  display: block; }

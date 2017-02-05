@@ -18,6 +18,9 @@
             Score: <span id="score"></span>,
             Moves left: <span id="moves-left"></span>
           </h3>
+          <p class="directions">
+            Directions: Connect dots of the same color to score points. Form rectangles to collect all dots of the same color.
+          </p>
         </div>
         <div class="credits">
           <p class="link-out">
@@ -25,8 +28,18 @@
           </p>
         </div>
       </div>
-      <div class="canvas-container">
-        <canvas id="spots-game" width="600px" height="600px"></canvas>
+      <div class="canvas-container" id="canvas-container">
+        <div class="game-over-text" id="game-over-text">
+            <p class="new-high-score" id="new-high-score">
+              Congratulations! You scored a new personal high score.<br>
+              New high score: <span class="high-score-text"></span>
+            </p>
+            <p class="same-high-score" id="same-high-score">
+              You scored <span id="this-score-text"></span> points.<br>
+              Your high score is <span class="high-score-text"></span>.
+            </p>
+        </div>
+        <canvas class="spots-game" id="spots-game" width="600px" height="600px"></canvas>
       </div>
     </div>
     <script src="./dist/js/bundle.js"></script>

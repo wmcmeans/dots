@@ -75,6 +75,8 @@
 	
 	var _Board2 = _interopRequireDefault(_Board);
 	
+	var _constants = __webpack_require__(4);
+	
 	var _util = __webpack_require__(5);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -94,6 +96,7 @@
 	
 	    this.board = new _Board2.default();
 	    this.setupScoreBoard();
+	    this.setupGameOverText();
 	  }
 	
 	  _createClass(SpotsGame, [{
@@ -119,9 +122,27 @@
 	      this.ctx.clearRect(0, 0, this.xDim, this.yDim);
 	    }
 	  }, {
+	    key: 'displayGameOverText',
+	    value: function displayGameOverText() {
+	      var _this = this;
+	
+	      this.endGameDom.highScoreTextNodes.forEach(function (span) {
+	        return span.textContent = _this.highScore;
+	      });
+	      this.endGameDom.thisScoreTextNode.textContent = this.score;
+	      if (this.newHighScore) {
+	        this.endGameDom.gameOverText.classList.add('new-high-score');
+	      } else {
+	        this.endGameDom.gameOverText.classList.remove('new-high-score');
+	      }
+	      this.endGameDom.canvasContainer.classList.add('game-over');
+	    }
+	  }, {
 	    key: 'end',
 	    value: function end() {
 	      this.over = true;
+	      this.updateHighScoreIfBeaten();
+	      this.displayGameOverText();
 	    }
 	  }, {
 	    key: 'endMove',
@@ -144,6 +165,20 @@
 	      this.board.draw(this.ctx, this.cursorPos, timeDelta);
 	    }
 	  }, {
+	    key: 'setupGameOverText',
+	    value: function setupGameOverText() {
+	      this.endGameDom = {
+	        canvasContainer: (0, _util.queryEl)('#canvas-container'),
+	        gameOverText: (0, _util.queryEl)('#game-over-text'),
+	        newHighScoreText: (0, _util.queryEl)('#new-high-score'),
+	        sameHighScoreText: (0, _util.queryEl)('#same-high-score'),
+	        highScoreTextNodes: (0, _util.queryElAll)('.high-score-text'),
+	        thisScoreTextNode: (0, _util.queryEl)('#this-score-text')
+	      };
+	
+	      this.endGameDom.canvasContainer.classList.remove('game-over');
+	    }
+	  }, {
 	    key: 'setupScoreBoard',
 	    value: function setupScoreBoard() {
 	      this.gameTracker = {
@@ -158,17 +193,17 @@
 	  }, {
 	    key: 'start',
 	    value: function start() {
-	      var _this = this;
+	      var _this2 = this;
 	
 	      var animate = function animate(time) {
-	        var timeDelta = time - _this.lastTime;
-	        _this.lastTime = time;
+	        var timeDelta = time - _this2.lastTime;
+	        _this2.lastTime = time;
 	
-	        _this.render(timeDelta);
-	        if (!_this.over) {
+	        _this2.render(timeDelta);
+	        if (!_this2.over) {
 	          window.requestAnimationFrame(animate);
 	        } else {
-	          _this.clearCanvas();
+	          _this2.clearCanvas();
 	        }
 	      };
 	      animate(0);
@@ -177,37 +212,48 @@
 	  }, {
 	    key: 'trackCursor',
 	    value: function trackCursor() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      this.cursorPos = { x: 0, y: 0 };
 	
 	      document.addEventListener('mousemove', function (e) {
-	        return _this2.cursorPos = (0, _util.getCursorPos)(_this2.ctx.canvas, e);
+	        return _this3.cursorPos = (0, _util.getCursorPos)(_this3.ctx.canvas, e);
 	      });
 	
 	      document.addEventListener('touchmove', function (e) {
-	        return _this2.cursorPos = (0, _util.getTouchPos)(_this2.ctx.canvas, e);
+	        return _this3.cursorPos = (0, _util.getTouchPos)(_this3.ctx.canvas, e);
 	      });
 	    }
 	  }, {
 	    key: 'trackMoves',
 	    value: function trackMoves() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      this.ctx.canvas.addEventListener('mousedown', function () {
-	        return _this3.beginMove();
+	        return _this4.beginMove();
 	      });
 	      this.ctx.canvas.addEventListener('touchstart', function (e) {
-	        _this3.cursorPos = (0, _util.getTouchPos)(_this3.ctx.canvas, e);
-	        _this3.beginMove();
+	        _this4.cursorPos = (0, _util.getTouchPos)(_this4.ctx.canvas, e);
+	        _this4.beginMove();
 	      });
 	
 	      window.addEventListener('mouseup', function () {
-	        return _this3.endMove();
+	        return _this4.endMove();
 	      });
 	      window.addEventListener('touchend', function () {
-	        return _this3.endMove();
+	        return _this4.endMove();
 	      });
+	    }
+	  }, {
+	    key: 'updateHighScoreIfBeaten',
+	    value: function updateHighScoreIfBeaten() {
+	      this.highScore = parseInt(localStorage.getItem(_constants.HIGH_SCORE), 10);
+	      this.newHighScore = false;
+	      if (this.score > this.highScore || Number.isNaN(this.highScore)) {
+	        this.newHighScore = true;
+	        this.highScore = this.score;
+	        localStorage.setItem(_constants.HIGH_SCORE, this.score);
+	      }
 	    }
 	  }, {
 	    key: 'updateScore',
@@ -687,6 +733,8 @@
 	  bottom: { x: 0, y: -1 },
 	  left: { x: -1, y: 0 }
 	};
+	
+	var HIGH_SCORE = exports.HIGH_SCORE = 'spots-high-score';
 
 /***/ },
 /* 5 */

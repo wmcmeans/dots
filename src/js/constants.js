@@ -14,3 +14,5 @@ export const DELTAS = {
   bottom: { x: 0, y: -1 },
   left: { x: -1, y: 0 },
 };
+
+export const HIGH_SCORE = 'spots-high-score';

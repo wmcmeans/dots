@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   context: __dirname,
   entry: './src/js/index.js',
@@ -26,4 +28,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+    }),
+  ],
 };

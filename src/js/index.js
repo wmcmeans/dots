@@ -3,7 +3,8 @@ import { queryEl } from './util';
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = queryEl('#spots-game');
-  new SpotsGame(canvas).start();
+  const game = new SpotsGame(canvas);
+  game.start();
 
   queryEl('#new-game-btn').addEventListener('click', () => window.location.reload());
 });

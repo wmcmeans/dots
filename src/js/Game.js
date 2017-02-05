@@ -10,15 +10,12 @@ import {
 } from './util';
 
 export default class SpotsGame {
-  constructor(canvas, alreadyPlayed) {
+  constructor(canvas) {
     this.xDim = canvas.offsetWidth;
     this.yDim = canvas.offsetHeight;
     this.ctx = canvas.getContext('2d');
-    if (!alreadyPlayed) {
-      fixCanvasBlur(canvas);
-    }
+    fixCanvasBlur(canvas);
 
-    this.listenerRemoves = [];
     this.trackCursor();
 
     this.board = new Board();
@@ -86,8 +83,7 @@ export default class SpotsGame {
       movesLeft: queryEl('#moves-left'),
     };
     this.score = 0;
-    this.movesLeft = 3;
-    // this.movesLeft = 31;
+    this.movesLeft = 31;
     this.updateScore();
   }
   start() {
@@ -113,9 +109,6 @@ export default class SpotsGame {
 
     document.addEventListener('mousemove', mouseMoveListen);
     document.addEventListener('touchmove', touchMoveListen);
-
-    this.listenerRemoves.push(() => document.removeEventListener('mousemove', mouseMoveListen));
-    this.listenerRemoves.push(() => document.removeEventListener('touchmove', touchMoveListen));
   }
   trackMoves() {
     const mouseDownListen = () => this.beginMove();
@@ -127,15 +120,9 @@ export default class SpotsGame {
     this.ctx.canvas.addEventListener('mousedown', mouseDownListen);
     this.ctx.canvas.addEventListener('touchstart', touchStartListen);
 
-    this.listenerRemoves.push(() => document.removeEventListener('mousedown', mouseDownListen));
-    this.listenerRemoves.push(() => document.removeEventListener('touchstart', touchStartListen));
-
     const endMoveListen = () => this.endMove();
-    window.addEventListener('mouseup', () => this.endMove());
-    window.addEventListener('touchend', () => this.endMove());
-
-    this.listenerRemoves.push(() => document.removeEventListener('mouseup', endMoveListen));
-    this.listenerRemoves.push(() => document.removeEventListener('touchend', endMoveListen));
+    window.addEventListener('mouseup', endMoveListen);
+    window.addEventListener('touchend', endMoveListen);
   }
   updateHighScoreIfBeaten() {
     this.highScore = parseInt(localStorage.getItem(HIGH_SCORE), 10);

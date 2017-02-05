@@ -56,7 +56,8 @@
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	  var canvas = (0, _util.queryEl)('#spots-game');
-	  new _Game2.default(canvas).start();
+	  var game = new _Game2.default(canvas);
+	  game.start();
 	
 	  (0, _util.queryEl)('#new-game-btn').addEventListener('click', function () {
 	    return window.location.reload();
@@ -88,17 +89,14 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var SpotsGame = function () {
-	  function SpotsGame(canvas, alreadyPlayed) {
+	  function SpotsGame(canvas) {
 	    _classCallCheck(this, SpotsGame);
 	
 	    this.xDim = canvas.offsetWidth;
 	    this.yDim = canvas.offsetHeight;
 	    this.ctx = canvas.getContext('2d');
-	    if (!alreadyPlayed) {
-	      (0, _util.fixCanvasBlur)(canvas);
-	    }
+	    (0, _util.fixCanvasBlur)(canvas);
 	
-	    this.listenerRemoves = [];
 	    this.trackCursor();
 	
 	    this.board = new _Board2.default();
@@ -189,8 +187,7 @@
 	        movesLeft: (0, _util.queryEl)('#moves-left')
 	      };
 	      this.score = 0;
-	      this.movesLeft = 3;
-	      // this.movesLeft = 31;
+	      this.movesLeft = 31;
 	      this.updateScore();
 	    }
 	  }, {
@@ -228,13 +225,6 @@
 	
 	      document.addEventListener('mousemove', mouseMoveListen);
 	      document.addEventListener('touchmove', touchMoveListen);
-	
-	      this.listenerRemoves.push(function () {
-	        return document.removeEventListener('mousemove', mouseMoveListen);
-	      });
-	      this.listenerRemoves.push(function () {
-	        return document.removeEventListener('touchmove', touchMoveListen);
-	      });
 	    }
 	  }, {
 	    key: 'trackMoves',
@@ -252,29 +242,11 @@
 	      this.ctx.canvas.addEventListener('mousedown', mouseDownListen);
 	      this.ctx.canvas.addEventListener('touchstart', touchStartListen);
 	
-	      this.listenerRemoves.push(function () {
-	        return document.removeEventListener('mousedown', mouseDownListen);
-	      });
-	      this.listenerRemoves.push(function () {
-	        return document.removeEventListener('touchstart', touchStartListen);
-	      });
-	
 	      var endMoveListen = function endMoveListen() {
 	        return _this4.endMove();
 	      };
-	      window.addEventListener('mouseup', function () {
-	        return _this4.endMove();
-	      });
-	      window.addEventListener('touchend', function () {
-	        return _this4.endMove();
-	      });
-	
-	      this.listenerRemoves.push(function () {
-	        return document.removeEventListener('mouseup', endMoveListen);
-	      });
-	      this.listenerRemoves.push(function () {
-	        return document.removeEventListener('touchend', endMoveListen);
-	      });
+	      window.addEventListener('mouseup', endMoveListen);
+	      window.addEventListener('touchend', endMoveListen);
 	    }
 	  }, {
 	    key: 'updateHighScoreIfBeaten',
